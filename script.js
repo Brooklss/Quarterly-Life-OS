@@ -454,9 +454,18 @@ class HabitTracker {
     }
 
     deleteTodo(todoId) {
-        this.todos = this.todos.filter(t => t.id !== todoId);
-        this.saveTodosToStorage();
-        this.renderTodos();
+        const todo = this.todos.find(t => t.id === todoId);
+        if (todo) {
+            // Remove from daily todos
+            this.todos = this.todos.filter(t => t.id !== todoId);
+            this.saveTodosToStorage();
+            this.renderTodos();
+
+            // Remove from weekly todos if it exists
+            this.weeklyTodos = this.weeklyTodos.filter(t => t.text !== todo.text);
+            this.saveWeeklyTodosToStorage();
+            this.renderWeeklyTodos();
+        }
     }
 
     renderTodos() {
@@ -614,4 +623,4 @@ class HabitTracker {
 let habitTracker;
 document.addEventListener('DOMContentLoaded', () => {
     habitTracker = new HabitTracker();
-}); 
+});
