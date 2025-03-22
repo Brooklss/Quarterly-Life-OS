@@ -9,24 +9,27 @@
 <body>
     <div class="container">
         <header>
-            <h1>Quarter Habits</h1>
-            <div class="time-selector">
-                <div class="selector-group">
-                    <label>year</label>
-                    <div class="selector-buttons">
-                        <button class="selector-btn decrease-year">-</button>
-                        <span id="yearDisplay">2024</span>
-                        <button class="selector-btn increase-year">+</button>
+            <div class="header-content">
+                <h1>Quarter Habits</h1>
+                <div class="time-selector">
+                    <div class="selector-group">
+                        <label>year</label>
+                        <div class="selector-buttons">
+                            <button class="selector-btn decrease-year">-</button>
+                            <span id="yearDisplay">2024</span>
+                            <button class="selector-btn increase-year">+</button>
+                        </div>
+                    </div>
+                    <div class="selector-group">
+                        <label>quarter</label>
+                        <div class="selector-buttons">
+                            <button class="selector-btn decrease-quarter">-</button>
+                            <span id="quarterDisplay">1</span>
+                            <button class="selector-btn increase-quarter">+</button>
+                        </div>
                     </div>
                 </div>
-                <div class="selector-group">
-                    <label>quarter</label>
-                    <div class="selector-buttons">
-                        <button class="selector-btn decrease-quarter">-</button>
-                        <span id="quarterDisplay">1</span>
-                        <button class="selector-btn increase-quarter">+</button>
-                    </div>
-                </div>
+                <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
             </div>
         </header>
         
@@ -77,6 +80,25 @@
                         <!-- Weekly todos will be added here dynamically -->
                     </div>
                     <button id="addWeeklyTodoBtn" class="add-weekly-todo-btn">+ Add Weekly Task</button>
+                </div>
+
+                <div class="journals-section">
+                    <h3>Weekly Journals:</h3>
+                    <div class="journal-navigation">
+                        <button id="prevJournalBtn" class="journal-nav-btn">-</button>
+                        <button id="nextJournalBtn" class="journal-nav-btn">+</button>
+                    </div>
+                    <div class="journals-list">
+                        <!-- Journals will be added here dynamically -->
+                    </div>
+                    <button id="addJournalBtn" class="add-journal-btn">+ Add Journal</button>
+                </div>
+
+                <div class="streaks-section">
+                    <h3>Streaks:</h3>
+                    <div class="streaks-list">
+                        <!-- Streak loaders will be added here dynamically -->
+                    </div>
                 </div>
             </div>
         </div>

@@ -10,6 +10,7 @@ class HabitTracker {
         this.setupGoalsModal();
         this.setupTodosModal();
         this.setupWeeklyTodosModal();
+        this.setupDarkModeToggle();
     }
 
     setInitialDate() {
@@ -34,6 +35,11 @@ class HabitTracker {
         this.addTodoBtn = document.getElementById('addTodoBtn');
         this.weeklyTodosList = document.querySelector('.weekly-todos-list');
         this.addWeeklyTodoBtn = document.getElementById('addWeeklyTodoBtn');
+        this.streaksList = document.querySelector('.streaks-list');
+        this.journalsList = document.querySelector('.journals-list');
+        this.addJournalBtn = document.getElementById('addJournalBtn');
+        this.prevJournalBtn = document.getElementById('prevJournalBtn');
+        this.nextJournalBtn = document.getElementById('nextJournalBtn');
         
         // Set initial display values
         this.yearDisplay.textContent = this.currentYear;
@@ -46,6 +52,8 @@ class HabitTracker {
         this.goals = this.loadGoalsFromStorage();
         this.todos = this.loadTodosFromStorage();
         this.weeklyTodos = this.loadWeeklyTodosFromStorage();
+        this.journals = this.loadJournalsFromStorage();
+        this.currentJournalIndex = 0;
         this.checkWeeklyTodos();
     }
 
@@ -68,6 +76,10 @@ class HabitTracker {
 
     getWeeklyTodosStorageKey() {
         return 'weekly_todos';
+    }
+
+    getJournalsStorageKey() {
+        return 'weekly_journals';
     }
 
     loadFromLocalStorage() {
@@ -130,7 +142,8 @@ class HabitTracker {
             name: name,
             color: this.habitColorInput.value,
             quarter: this.currentQuarter,
-            year: this.currentYear
+            year: this.currentYear,
+            streak: 0 // Initialize streak count
         };
 
         this.habits.push(habit);
@@ -157,14 +170,27 @@ class HabitTracker {
         this.createGrid();
     }
 
+    renderStreaks() {
+        this.streaksList.innerHTML = this.habits.map(habit => `
+            <div class="streak-item">
+                <span class="streak-name">${habit.name}</span>
+                <div class="streak-loader">
+                    <div class="streak-fill" style="width: ${Math.min(habit.streak / 93 * 100, 100)}%; background-color: ${habit.color};"></div>
+                </div>
+            </div>
+        `).join('');
+    }
+
     renderHabits() {
         this.habitsList.innerHTML = this.habits.map(habit => `
             <div class="habit-item">
                 <div class="color-preview" style="background-color: ${habit.color}"></div>
                 <span class="habit-name">${habit.name}</span>
+                <span class="streak-count">Streak: ${habit.streak}</span>
                 <button class="delete-habit-btn" onclick="habitTracker.deleteHabit(${habit.id})">Delete</button>
             </div>
         `).join('');
+        this.renderStreaks();
     }
 
     saveHabitsToStorage() {
@@ -173,6 +199,21 @@ class HabitTracker {
 
     loadHabitsFromStorage() {
         return JSON.parse(localStorage.getItem(this.getHabitsStorageKey())) || [];
+    }
+
+    toggleHabitCell(habitCell, cellId, habit) {
+        habitCell.classList.toggle('checked');
+        this.habitData[cellId] = habitCell.classList.contains('checked');
+        this.saveToLocalStorage();
+
+        // Update streak count
+        if (habitCell.classList.contains('checked')) {
+            habit.streak++;
+        } else {
+            habit.streak--;
+        }
+        this.saveHabitsToStorage();
+        this.renderHabits();
     }
 
     createGrid() {
@@ -218,6 +259,9 @@ class HabitTracker {
             });
             monthColumn.appendChild(habitHeaderRow);
 
+            // Get the number of days in the current month
+            const daysInMonth = new Date(this.currentYear, startMonth + monthIndex + 1, 0).getDate();
+
             // Create days grid
             for (let day = 1; day <= 31; day++) {
                 const dayRow = document.createElement('div');
@@ -234,11 +278,14 @@ class HabitTracker {
                         habitCell.classList.add('checked');
                     }
 
-                    habitCell.addEventListener('click', () => {
-                        habitCell.classList.toggle('checked');
-                        this.habitData[cellId] = habitCell.classList.contains('checked');
-                        this.saveToLocalStorage();
-                    });
+                    // Disable cells for days that do not exist in the current month
+                    if (day > daysInMonth) {
+                        habitCell.classList.add('disabled');
+                    } else {
+                        habitCell.addEventListener('click', () => {
+                            this.toggleHabitCell(habitCell, cellId, habit);
+                        });
+                    }
                     
                     dayRow.appendChild(habitCell);
                 });
@@ -256,11 +303,13 @@ class HabitTracker {
         this.goals = this.loadGoalsFromStorage();
         this.todos = this.loadTodosFromStorage();
         this.weeklyTodos = this.loadWeeklyTodosFromStorage();
+        this.journals = this.loadJournalsFromStorage();
         this.renderHabits();
         this.createGrid();
         this.renderGoals();
         this.renderTodos();
         this.renderWeeklyTodos();
+        this.renderJournals();
         this.checkWeeklyTodos();
     }
 
@@ -303,16 +352,23 @@ class HabitTracker {
         this.addGoalBtn.addEventListener('click', () => this.openGoalModal());
         this.addTodoBtn.addEventListener('click', () => this.openTodoModal());
         this.addWeeklyTodoBtn.addEventListener('click', () => this.openWeeklyTodoModal());
+        this.addJournalBtn.addEventListener('click', () => this.openJournalModal());
+        this.prevJournalBtn.addEventListener('click', () => this.showPreviousJournal());
+        this.nextJournalBtn.addEventListener('click', () => this.showNextJournal());
     }
 
     setupGoalsModal() {
         const modalHTML = `
             <div class="modal" id="goalModal">
                 <div class="modal-content">
-                    <h3>Add Quarter Goal</h3>
+                    <h3 id="goalModalTitle">Add Quarter Goal</h3>
                     <div class="form-group">
                         <label for="goalText">Goal:</label>
                         <input type="text" id="goalText" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="goalSystem">System:</label>
+                        <textarea id="goalSystem" rows="10" required></textarea> <!-- Increase rows -->
                     </div>
                     <div class="modal-buttons">
                         <button class="modal-btn cancel" id="cancelGoal">Cancel</button>
@@ -324,35 +380,64 @@ class HabitTracker {
         document.body.insertAdjacentHTML('beforeend', modalHTML);
         
         this.goalModal = document.getElementById('goalModal');
+        this.goalModalTitle = document.getElementById('goalModalTitle');
         this.goalTextInput = document.getElementById('goalText');
+        this.goalSystemInput = document.getElementById('goalSystem');
         
         document.getElementById('cancelGoal').addEventListener('click', () => this.closeGoalModal());
         document.getElementById('saveGoal').addEventListener('click', () => this.saveGoal());
     }
 
-    openGoalModal() {
+    openGoalModal(editMode = false, goalId = null) {
         this.goalModal.classList.add('active');
         this.goalTextInput.focus();
+        if (editMode) {
+            const goal = this.goals.find(g => g.id === goalId);
+            if (goal) {
+                this.goalModalTitle.textContent = 'Edit Quarter Goal';
+                this.goalTextInput.value = goal.text;
+                this.goalSystemInput.value = goal.system;
+                this.currentEditingGoalId = goalId;
+            }
+        } else {
+            this.goalModalTitle.textContent = 'Add Quarter Goal';
+            this.goalTextInput.value = '';
+            this.goalSystemInput.value = '';
+            this.currentEditingGoalId = null;
+        }
     }
 
     closeGoalModal() {
         this.goalModal.classList.remove('active');
         this.goalTextInput.value = '';
+        this.goalSystemInput.value = '';
+        this.currentEditingGoalId = null;
     }
 
     saveGoal() {
         const text = this.goalTextInput.value.trim();
-        if (!text) return;
+        const system = this.goalSystemInput.value.trim();
+        if (!text || !system) return;
 
-        const goal = {
-            id: Date.now(),
-            text: text,
-            completed: false,
-            quarter: this.currentQuarter,
-            year: this.currentYear
-        };
+        if (this.currentEditingGoalId) {
+            const goal = this.goals.find(g => g.id === this.currentEditingGoalId);
+            if (goal) {
+                goal.text = text;
+                goal.system = system;
+                goal.date = new Date().toISOString().split('T')[0];
+            }
+        } else {
+            const goal = {
+                id: Date.now(),
+                text: text,
+                system: system,
+                completed: false,
+                quarter: this.currentQuarter,
+                year: this.currentYear
+            };
+            this.goals.push(goal);
+        }
 
-        this.goals.push(goal);
         this.saveGoalsToStorage();
         this.renderGoals();
         this.closeGoalModal();
@@ -375,11 +460,11 @@ class HabitTracker {
 
     renderGoals() {
         this.goalsList.innerHTML = this.goals.map(goal => `
-            <div class="goal-item">
+            <div class="goal-item" onclick="habitTracker.openGoalModal(true, ${goal.id})">
                 <div class="goal-checkbox ${goal.completed ? 'checked' : ''}" 
-                     onclick="habitTracker.toggleGoal(${goal.id})"></div>
+                     onclick="event.stopPropagation(); habitTracker.toggleGoal(${goal.id})"></div>
                 <span class="goal-text">${goal.text}</span>
-                <button class="delete-goal-btn" onclick="habitTracker.deleteGoal(${goal.id})">Delete</button>
+                <button class="delete-goal-btn" onclick="event.stopPropagation(); habitTracker.deleteGoal(${goal.id})">Delete</button>
             </div>
         `).join('');
     }
@@ -617,10 +702,184 @@ class HabitTracker {
     loadWeeklyTodosFromStorage() {
         return JSON.parse(localStorage.getItem(this.getWeeklyTodosStorageKey())) || [];
     }
+
+    setupJournalModal() {
+        const modalHTML = `
+            <div class="modal" id="journalModal">
+                <div class="modal-content">
+                    <h3 id="journalModalTitle">Add Weekly Journal</h3>
+                    <div class="form-group">
+                        <label for="journalText">What Worked Well?</label>
+                        <textarea id="journalWorkedWell" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="journalText">What Didn’t Work?</label>
+                        <textarea id="journalDidntWork" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="journalText">What Needs Adjustment?</label>
+                        <textarea id="journalNeedsAdjustment" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="journalText">How Do I Feel?</label>
+                        <textarea id="journalFeel" rows="3" required></textarea>
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="modal-btn cancel" id="cancelJournal">Cancel</button>
+                        <button class="modal-btn save" id="saveJournal">Save</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        this.journalModal = document.getElementById('journalModal');
+        this.journalModalTitle = document.getElementById('journalModalTitle');
+        this.journalWorkedWellInput = document.getElementById('journalWorkedWell');
+        this.journalDidntWorkInput = document.getElementById('journalDidntWork');
+        this.journalNeedsAdjustmentInput = document.getElementById('journalNeedsAdjustment');
+        this.journalFeelInput = document.getElementById('journalFeel');
+        
+        document.getElementById('cancelJournal').addEventListener('click', () => this.closeJournalModal());
+        document.getElementById('saveJournal').addEventListener('click', () => this.saveJournal());
+    }
+
+    openJournalModal(editMode = false, journalId = null) {
+        this.journalModal.classList.add('active');
+        this.journalWorkedWellInput.focus();
+        if (editMode) {
+            const journal = this.journals.find(j => j.id === journalId);
+            if (journal) {
+                this.journalModalTitle.textContent = 'Edit Weekly Journal';
+                this.journalWorkedWellInput.value = journal.workedWell;
+                this.journalDidntWorkInput.value = journal.didntWork;
+                this.journalNeedsAdjustmentInput.value = journal.needsAdjustment;
+                this.journalFeelInput.value = journal.feel;
+                this.currentEditingJournalId = journalId;
+            }
+        } else {
+            this.journalModalTitle.textContent = 'Add Weekly Journal';
+            this.journalWorkedWellInput.value = '';
+            this.journalDidntWorkInput.value = '';
+            this.journalNeedsAdjustmentInput.value = '';
+            this.journalFeelInput.value = '';
+            this.currentEditingJournalId = null;
+        }
+    }
+
+    closeJournalModal() {
+        this.journalModal.classList.remove('active');
+        this.journalWorkedWellInput.value = '';
+        this.journalDidntWorkInput.value = '';
+        this.journalNeedsAdjustmentInput.value = '';
+        this.journalFeelInput.value = '';
+        this.currentEditingJournalId = null;
+    }
+
+    saveJournal() {
+        const workedWell = this.journalWorkedWellInput.value.trim();
+        const didntWork = this.journalDidntWorkInput.value.trim();
+        const needsAdjustment = this.journalNeedsAdjustmentInput.value.trim();
+        const feel = this.journalFeelInput.value.trim();
+        if (!workedWell || !didntWork || !needsAdjustment || !feel) return;
+
+        if (this.currentEditingJournalId) {
+            const journal = this.journals.find(j => j.id === this.currentEditingJournalId);
+            if (journal) {
+                journal.workedWell = workedWell;
+                journal.didntWork = didntWork;
+                journal.needsAdjustment = needsAdjustment;
+                journal.feel = feel;
+                journal.date = new Date().toISOString().split('T')[0];
+            }
+        } else {
+            const journal = {
+                id: Date.now(),
+                workedWell: workedWell,
+                didntWork: didntWork,
+                needsAdjustment: needsAdjustment,
+                feel: feel,
+                date: new Date().toISOString().split('T')[0]
+            };
+            this.journals.push(journal);
+        }
+
+        this.saveJournalsToStorage();
+        this.renderJournals();
+        this.closeJournalModal();
+    }
+
+    deleteJournal(journalId) {
+        this.journals = this.journals.filter(j => j.id !== journalId);
+        this.saveJournalsToStorage();
+        this.renderJournals();
+    }
+
+    renderJournals() {
+        if (this.journals.length === 0) {
+            this.journalsList.innerHTML = '<p>No journals available.</p>';
+            return;
+        }
+
+        const journal = this.journals[this.currentJournalIndex];
+        this.journalsList.innerHTML = `
+            <div class="journal-item" onclick="habitTracker.openJournalModal(true, ${journal.id})">
+                <span class="journal-date">${new Date(journal.date).toLocaleDateString()}</span>
+                <p class="journal-text"><strong>What Worked Well?</strong><br>${journal.workedWell}</p>
+                <p class="journal-text"><strong>What Didn’t Work?</strong><br>${journal.didntWork}</p>
+                <p class="journal-text"><strong>What Needs Adjustment?</strong><br>${journal.needsAdjustment}</p>
+                <p class="journal-text"><strong>How Do I Feel?</strong><br>${journal.feel}</p>
+                <button class="delete-journal-btn" onclick="event.stopPropagation(); habitTracker.deleteJournal(${journal.id})">Delete</button>
+            </div>
+        `;
+    }
+
+    showPreviousJournal() {
+        if (this.currentJournalIndex > 0) {
+            this.currentJournalIndex--;
+            this.renderJournals();
+        }
+    }
+
+    showNextJournal() {
+        if (this.currentJournalIndex < this.journals.length - 1) {
+            this.currentJournalIndex++;
+            this.renderJournals();
+        }
+    }
+
+    loadJournalsFromStorage() {
+        return JSON.parse(localStorage.getItem(this.getJournalsStorageKey())) || [];
+    }
+
+    saveJournalsToStorage() {
+        localStorage.setItem(this.getJournalsStorageKey(), JSON.stringify(this.journals));
+    }
+
+    setupDarkModeToggle() {
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.textContent = '☀️';
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            darkModeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDarkMode);
+            document.querySelectorAll('.container, .header-content, .time-selector, .tracker-grid, .date-cell, .habit-cell, .side-panel, .habits-section, .rewards-section, .goals-section, .todos-section, .weekly-todos-section, .journals-section, .streaks-section, .habits-list, .goals-list, .todos-list, .weekly-todos-list, .journals-list, .habit-item, .goal-item, .todo-item, .weekly-todo-item, .journal-item, .delete-habit-btn, .delete-goal-btn, .delete-todo-btn, .delete-journal-btn, .add-habit-btn, .add-goal-btn, .add-todo-btn, .add-weekly-todo-btn, .add-journal-btn, .modal-content, .form-group input, .form-group textarea, .modal-btn').forEach(el => {
+                el.classList.toggle('dark-mode');
+            });
+        });
+    }
 }
 
 // Make habitTracker globally accessible for the delete button onclick handler
 let habitTracker;
 document.addEventListener('DOMContentLoaded', () => {
     habitTracker = new HabitTracker();
+    habitTracker.setupJournalModal();
+    habitTracker.setupGoalsModal();
 });

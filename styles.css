@@ -14,6 +14,11 @@ body {
     justify-content: center;
 }
 
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
 .container {
     background-color: white;
     border-radius: 12px;
@@ -24,10 +29,20 @@ body {
     margin: 20px auto;
 }
 
+.container.dark-mode {
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
 header {
     margin-bottom: 32px;
     padding-bottom: 16px;
     border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+header.dark-mode {
+    border-bottom: 1px solid #333;
 }
 
 h1 {
@@ -35,6 +50,10 @@ h1 {
     font-weight: normal;
     margin-bottom: 16px;
     color: #333;
+}
+
+h1.dark-mode {
+    color: #e0e0e0;
 }
 
 .quarter-selector {
@@ -69,10 +88,16 @@ h1 {
     margin-top: 8px;
 }
 
+.time-selector.dark-mode {
+    background: #333;
+    color: #e0e0e0;
+}
+
 .selector-group {
     display: flex;
     align-items: center;
     gap: 12px;
+    justify-content: center; /* Center the selector-group */
 }
 
 .selector-buttons {
@@ -99,12 +124,24 @@ h1 {
     transition: all 0.2s ease;
 }
 
+.selector-btn.dark-mode {
+    color: #e0e0e0;
+}
+
 .selector-btn:hover {
     background: #f0f0f0;
 }
 
+.selector-btn.dark-mode:hover {
+    background: #444;
+}
+
 .selector-btn:active {
     background: #e0e0e0;
+}
+
+.selector-btn.dark-mode:active {
+    background: #555;
 }
 
 #yearDisplay,
@@ -126,6 +163,10 @@ h1 {
     align-items: flex-start;
 }
 
+.tracker-grid.dark-mode {
+    color: #e0e0e0;
+}
+
 .dates-column {
     display: flex;
     flex-direction: column;
@@ -142,6 +183,10 @@ h1 {
     color: #666;
     font-size: 0.9rem;
     margin-bottom: 2px;
+}
+
+.date-cell.dark-mode {
+    color: #888;
 }
 
 .month-columns {
@@ -196,14 +241,39 @@ h1 {
     transition: all 0.2s ease;
 }
 
+.habit-cell.dark-mode {
+    border-color: #444;
+}
+
 .habit-cell:hover {
     border-color: #999;
     background-color: #f8f8f8;
 }
 
+.habit-cell.dark-mode:hover {
+    border-color: #666;
+    background-color: #333;
+}
+
 .habit-cell.checked {
     background-color: var(--habit-color, #2196F3);
     border-color: var(--habit-color, #2196F3);
+}
+
+.habit-cell.checked.dark-mode {
+    background-color: var(--habit-color, #2196F3);
+    border-color: var(--habit-color, #2196F3);
+}
+
+.habit-cell.disabled {
+    background-color: #e0e0e0;
+    border-color: #ccc;
+    cursor: not-allowed;
+}
+
+.habit-cell.disabled.dark-mode {
+    background-color: #444;
+    border-color: #555;
 }
 
 .side-panel {
@@ -213,8 +283,16 @@ h1 {
     padding-left: 32px;
 }
 
+.side-panel.dark-mode {
+    border-left: 1px solid #333;
+}
+
 .habits-section, .rewards-section {
     margin-bottom: 32px;
+}
+
+.habits-section.dark-mode, .rewards-section.dark-mode, .goals-section.dark-mode, .todos-section.dark-mode, .weekly-todos-section.dark-mode, .journals-section.dark-mode, .streaks-section.dark-mode {
+    color: #e0e0e0;
 }
 
 h3 {
@@ -235,6 +313,11 @@ h3 {
     gap: 10px;
 }
 
+.habits-list.dark-mode, .goals-list.dark-mode, .todos-list.dark-mode, .weekly-todos-list.dark-mode, .journals-list.dark-mode {
+    background-color: #2e2e2e;
+    border: 1px solid #444;
+}
+
 .habit-item {
     display: flex;
     align-items: center;
@@ -246,9 +329,19 @@ h3 {
     transition: all 0.2s ease;
 }
 
+.habit-item.dark-mode, .goal-item.dark-mode, .todo-item.dark-mode, .weekly-todo-item.dark-mode, .journal-item.dark-mode {
+    background: #333;
+    border: 1px solid #444;
+}
+
 .habit-item:hover {
     border-color: #ddd;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.habit-item.dark-mode:hover, .goal-item.dark-mode:hover, .todo-item.dark-mode:hover, .weekly-todo-item.dark-mode:hover, .journal-item.dark-mode:hover {
+    border-color: #555;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .habit-item .color-preview {
@@ -260,6 +353,12 @@ h3 {
 
 .habit-item .habit-name {
     flex-grow: 1;
+}
+
+.habit-item .streak-count {
+    font-weight: bold;
+    color: #2196F3;
+    margin-left: 10px;
 }
 
 .delete-habit-btn {
@@ -274,9 +373,17 @@ h3 {
     transition: all 0.2s ease;
 }
 
+.delete-habit-btn.dark-mode, .delete-goal-btn.dark-mode, .delete-todo-btn.dark-mode, .delete-journal-btn.dark-mode {
+    background: #ff4444;
+}
+
 .delete-habit-btn:hover {
     background: #cc0000;
     transform: translateY(-1px);
+}
+
+.delete-habit-btn.dark-mode:hover, .delete-goal-btn.dark-mode:hover, .delete-todo-btn.dark-mode:hover, .delete-journal-btn.dark-mode:hover {
+    background: #cc0000;
 }
 
 .delete-habit-btn:active {
@@ -295,7 +402,15 @@ h3 {
     width: 100%;
 }
 
+.add-habit-btn.dark-mode, .add-goal-btn.dark-mode, .add-todo-btn.dark-mode, .add-weekly-todo-btn.dark-mode, .add-journal-btn.dark-mode {
+    background: #2196F3;
+}
+
 .add-habit-btn:hover {
+    background: #1976D2;
+}
+
+.add-habit-btn.dark-mode:hover, .add-goal-btn.dark-mode:hover, .add-todo-btn.dark-mode:hover, .add-weekly-todo-btn.dark-mode:hover, .add-journal-btn.dark-mode:hover {
     background: #1976D2;
 }
 
@@ -530,8 +645,17 @@ h3 {
     max-width: 400px;
 }
 
+.modal-content.dark-mode {
+    background: #2e2e2e;
+    color: #e0e0e0;
+}
+
 .modal-content h3 {
     margin-bottom: 20px;
+}
+
+.modal-content.dark-mode h3 {
+    color: #e0e0e0;
 }
 
 .form-group {
@@ -544,11 +668,21 @@ h3 {
     color: #555;
 }
 
+.form-group.dark-mode label {
+    color: #e0e0e0;
+}
+
 .form-group input {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
+}
+
+.form-group.dark-mode input, .form-group.dark-mode textarea {
+    background: #444;
+    color: #e0e0e0;
+    border: 1px solid #555;
 }
 
 .modal-buttons {
@@ -568,9 +702,17 @@ h3 {
     background: #eee;
 }
 
+.modal-btn.dark-mode.cancel {
+    background: #555;
+}
+
 .modal-btn.save {
     background: #2196F3;
     color: white;
+}
+
+.modal-btn.dark-mode.save {
+    background: #2196F3;
 }
 
 .button-text {
@@ -619,9 +761,19 @@ h3 {
     transition: all 0.2s ease;
 }
 
+.goal-item.dark-mode {
+    background: #333;
+    border: 1px solid #444;
+}
+
 .goal-item:hover {
     border-color: #ddd;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.goal-item.dark-mode:hover {
+    border-color: #555;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .goal-checkbox {
@@ -661,9 +813,17 @@ h3 {
     transition: all 0.2s ease;
 }
 
+.delete-goal-btn.dark-mode {
+    background: #ff4444;
+}
+
 .delete-goal-btn:hover {
     background: #cc0000;
     transform: translateY(-1px);
+}
+
+.delete-goal-btn.dark-mode:hover {
+    background: #cc0000;
 }
 
 .delete-goal-btn:active {
@@ -682,7 +842,15 @@ h3 {
     width: 100%;
 }
 
+.add-goal-btn.dark-mode {
+    background: #2196F3;
+}
+
 .add-goal-btn:hover {
+    background: #1976D2;
+}
+
+.add-goal-btn.dark-mode:hover {
     background: #1976D2;
 }
 
@@ -702,6 +870,11 @@ h3 {
     gap: 10px;
 }
 
+.todos-list.dark-mode {
+    background-color: #2e2e2e;
+    border: 1px solid #444;
+}
+
 .todo-item {
     display: flex;
     align-items: center;
@@ -713,9 +886,19 @@ h3 {
     transition: all 0.2s ease;
 }
 
+.todo-item.dark-mode {
+    background: #333;
+    border: 1px solid #444;
+}
+
 .todo-item:hover {
     border-color: #ddd;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.todo-item.dark-mode:hover {
+    border-color: #555;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .todo-checkbox {
@@ -760,9 +943,17 @@ h3 {
     transition: all 0.2s ease;
 }
 
+.delete-todo-btn.dark-mode {
+    background: #ff4444;
+}
+
 .delete-todo-btn:hover {
     background: #cc0000;
     transform: translateY(-1px);
+}
+
+.delete-todo-btn.dark-mode:hover {
+    background: #cc0000;
 }
 
 .delete-todo-btn:active {
@@ -781,8 +972,16 @@ h3 {
     width: 100%;
 }
 
+.add-todo-btn.dark-mode {
+    background: #2196F3;
+}
+
 .add-todo-btn:hover {
     background: #388E3C;
+}
+
+.add-todo-btn.dark-mode:hover {
+    background: #1976D2;
 }
 
 /* Add styles for weekly todo section */
@@ -801,6 +1000,11 @@ h3 {
     gap: 10px;
 }
 
+.weekly-todos-list.dark-mode {
+    background-color: #2e2e2e;
+    border: 1px solid #444;
+}
+
 .weekly-todo-item {
     display: flex;
     align-items: center;
@@ -812,9 +1016,19 @@ h3 {
     transition: all 0.2s ease;
 }
 
+.weekly-todo-item.dark-mode {
+    background: #333;
+    border: 1px solid #444;
+}
+
 .weekly-todo-item:hover {
     border-color: #ddd;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.weekly-todo-item.dark-mode:hover {
+    border-color: #555;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .weekly-todo-content {
@@ -845,8 +1059,16 @@ h3 {
     width: 100%;
 }
 
+.add-weekly-todo-btn.dark-mode {
+    background: #2196F3;
+}
+
 .add-weekly-todo-btn:hover {
     background: #7B1FA2;
+}
+
+.add-weekly-todo-btn.dark-mode:hover {
+    background: #1976D2;
 }
 
 /* Add date input styles */
@@ -942,4 +1164,292 @@ h3 {
 .streak-count {
     font-weight: bold;
     color: #2196F3;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.streaks-section {
+    margin-top: 32px;
+}
+
+.streaks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.streak-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.streak-item .streak-name {
+    flex-grow: 1;
+}
+
+.streak-item .streak-loader {
+    width: 100px;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+.streak-item .streak-fill {
+    height: 100%;
+    background-color: var(--habit-color, #2196F3);
+    transition: width 0.3s ease;
+}
+
+.journals-section {
+    margin-bottom: 32px;
+}
+
+.journal-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.journal-nav-btn {
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.journal-nav-btn:hover {
+    background: #1976D2;
+}
+
+.journals-list {
+    min-height: 150px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.journals-list.dark-mode {
+    background-color: #2e2e2e;
+    border: 1px solid #444;
+}
+
+.journal-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 16px;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.journal-item.dark-mode {
+    background: #333;
+    border: 1px solid #444;
+}
+
+.journal-item:hover {
+    border-color: #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.journal-item.dark-mode:hover {
+    border-color: #555;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.journal-date {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.journal-text {
+    font-size: 1rem;
+    color: #333;
+    white-space: pre-wrap; /* Preserve line breaks */
+}
+
+.delete-journal-btn {
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    align-self: flex-end; /* Align button to the right */
+}
+
+.delete-journal-btn.dark-mode {
+    background: #ff4444;
+}
+
+.delete-journal-btn:hover {
+    background: #cc0000;
+    transform: translateY(-1px);
+}
+
+.delete-journal-btn.dark-mode:hover {
+    background: #cc0000;
+}
+
+.delete-journal-btn:active {
+    transform: translateY(0px);
+}
+
+.add-journal-btn {
+    margin-top: 12px;
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.add-journal-btn.dark-mode {
+    background: #2196F3;
+}
+
+.add-journal-btn:hover {
+    background: #1976D2;
+}
+
+.add-journal-btn.dark-mode:hover {
+    background: #1976D2;
+}
+
+/* Modal styles for journal */
+#journalModal .modal-content {
+    width: 90%;
+    max-width: 600px;
+}
+
+#journalModal .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    resize: vertical; /* Allow vertical resizing */
+}
+
+#journalModal .form-group label {
+    margin-top: 12px;
+}
+
+.delete-journal-btn {
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.delete-journal-btn.dark-mode {
+    background: #ff4444;
+}
+
+.delete-journal-btn:hover {
+    background: #cc0000;
+    transform: translateY(-1px);
+}
+
+.delete-journal-btn.dark-mode:hover {
+    background: #cc0000;
+}
+
+.delete-journal-btn:active {
+    transform: translateY(0px);
+}
+
+.add-journal-btn {
+    margin-top: 12px;
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.add-journal-btn.dark-mode {
+    background: #2196F3;
+}
+
+.add-journal-btn:hover {
+    background: #1976D2;
+}
+
+.add-journal-btn.dark-mode:hover {
+    background: #1976D2;
+}
+
+#goalModal .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    resize: vertical; /* Allow vertical resizing */
+}
+
+#goalModal .form-group label {
+    margin-top: 20px;
+}
+
+/* Add styles for larger goal system textarea */
+#goalSystem {
+    height: 500px; /* Further increase height */
+}
+
+/* Add styles for larger goal system textarea */
+#goalSystem {
+    height: 500px; /* Increase height */
+}
+
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #555;
+    transition: color 0.3s ease;
+    margin-left: 16px;
+}
+
+.dark-mode-toggle:hover {
+    color: #333;
+}
+
+body.dark-mode .dark-mode-toggle {
+    color: #e0e0e0;
+}
+
+body.dark-mode .dark-mode-toggle:hover {
+    color: #fff;
 }
