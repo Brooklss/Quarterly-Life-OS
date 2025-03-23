@@ -96,7 +96,7 @@ class HabitTracker {
         const modalHTML = `
             <div class="modal" id="habitModal">
                 <div class="modal-content">
-                    <h3>Add New Habit</h3>
+                    <h3 id="habitModalTitle">Add New Habit</h3>
                     <div class="form-group">
                         <label for="habitName">Habit Name:</label>
                         <input type="text" id="habitName" required>
@@ -115,6 +115,7 @@ class HabitTracker {
         document.body.insertAdjacentHTML('beforeend', modalHTML);
         
         this.modal = document.getElementById('habitModal');
+        this.habitModalTitle = document.getElementById('habitModalTitle');
         this.habitNameInput = document.getElementById('habitName');
         this.habitColorInput = document.getElementById('habitColor');
         
@@ -123,30 +124,55 @@ class HabitTracker {
         document.getElementById('saveHabit').addEventListener('click', () => this.saveHabit());
     }
 
-    openModal() {
+    openModal(editMode = false, habitId = null) {
         this.modal.classList.add('active');
         this.habitNameInput.focus();
+        if (editMode) {
+            const habit = this.habits.find(h => h.id === habitId);
+            if (habit) {
+                this.habitModalTitle.textContent = 'Edit Habit';
+                this.habitNameInput.value = habit.name;
+                this.habitColorInput.value = habit.color;
+                this.currentEditingHabitId = habitId;
+            }
+        } else {
+            this.habitModalTitle.textContent = 'Add New Habit';
+            this.habitNameInput.value = '';
+            this.habitColorInput.value = '#2196F3';
+            this.currentEditingHabitId = null;
+        }
     }
 
     closeModal() {
         this.modal.classList.remove('active');
         this.habitNameInput.value = '';
+        this.habitColorInput.value = '#2196F3';
+        this.currentEditingHabitId = null;
     }
 
     saveHabit() {
         const name = this.habitNameInput.value.trim();
+        const color = this.habitColorInput.value;
         if (!name) return;
 
-        const habit = {
-            id: Date.now(),
-            name: name,
-            color: this.habitColorInput.value,
-            quarter: this.currentQuarter,
-            year: this.currentYear,
-            streak: 0 // Initialize streak count
-        };
+        if (this.currentEditingHabitId) {
+            const habit = this.habits.find(h => h.id === this.currentEditingHabitId);
+            if (habit) {
+                habit.name = name;
+                habit.color = color;
+            }
+        } else {
+            const habit = {
+                id: Date.now(),
+                name: name,
+                color: color,
+                quarter: this.currentQuarter,
+                year: this.currentYear,
+                streak: 0 // Initialize streak count
+            };
+            this.habits.push(habit);
+        }
 
-        this.habits.push(habit);
         this.saveHabitsToStorage();
         this.renderHabits();
         this.createGrid();
@@ -183,11 +209,11 @@ class HabitTracker {
 
     renderHabits() {
         this.habitsList.innerHTML = this.habits.map(habit => `
-            <div class="habit-item">
+            <div class="habit-item" onclick="habitTracker.openModal(true, ${habit.id})">
                 <div class="color-preview" style="background-color: ${habit.color}"></div>
                 <span class="habit-name">${habit.name}</span>
                 <span class="streak-count">Streak: ${habit.streak}</span>
-                <button class="delete-habit-btn" onclick="habitTracker.deleteHabit(${habit.id})">Delete</button>
+                <button class="delete-habit-btn" onclick="event.stopPropagation(); habitTracker.deleteHabit(${habit.id})">Delete</button>
             </div>
         `).join('');
         this.renderStreaks();
@@ -236,6 +262,11 @@ class HabitTracker {
             new Date(this.currentYear, startMonth + 2).toLocaleString('default', { month: 'long' })
         ];
 
+        // Get today's date
+        const today = new Date();
+        const todayDate = today.getDate();
+        const todayMonth = today.getMonth();
+
         // Create month columns
         months.forEach((month, monthIndex) => {
             const monthColumn = document.createElement('div');
@@ -254,7 +285,6 @@ class HabitTracker {
                 const habitHeader = document.createElement('div');
                 habitHeader.className = 'habit-header';
                 habitHeader.style.setProperty('--habit-color', habit.color);
-                // Remove the text content, just show color
                 habitHeaderRow.appendChild(habitHeader);
             });
             monthColumn.appendChild(habitHeaderRow);
@@ -276,6 +306,11 @@ class HabitTracker {
                     
                     if (this.habitData[cellId]) {
                         habitCell.classList.add('checked');
+                    }
+
+                    // Highlight today's cell
+                    if (day === todayDate && (startMonth + monthIndex) === todayMonth) {
+                        habitCell.classList.add('today');
                     }
 
                     // Disable cells for days that do not exist in the current month

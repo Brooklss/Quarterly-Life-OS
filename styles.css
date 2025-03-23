@@ -276,6 +276,16 @@ h1.dark-mode {
     border-color: #555;
 }
 
+.habit-cell.today {
+    border: 2px solid #FF9800;
+    box-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
+}
+
+.habit-cell.today.dark-mode {
+    border: 2px solid #FF9800;
+    box-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
+}
+
 .side-panel {
     margin-left: 32px;
     min-width: 240px;
