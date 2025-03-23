@@ -481,7 +481,7 @@ class HabitTracker {
         const modalHTML = `
             <div class="modal" id="todoModal">
                 <div class="modal-content">
-                    <h3>Add Daily Task</h3>
+                    <h3 id="todoModalTitle">Add Daily Task</h3>
                     <div class="form-group">
                         <label for="todoText">Task:</label>
                         <input type="text" id="todoText" required>
@@ -496,34 +496,55 @@ class HabitTracker {
         document.body.insertAdjacentHTML('beforeend', modalHTML);
         
         this.todoModal = document.getElementById('todoModal');
+        this.todoModalTitle = document.getElementById('todoModalTitle');
         this.todoTextInput = document.getElementById('todoText');
         
         document.getElementById('cancelTodo').addEventListener('click', () => this.closeTodoModal());
         document.getElementById('saveTodo').addEventListener('click', () => this.saveTodo());
     }
 
-    openTodoModal() {
+    openTodoModal(editMode = false, todoId = null) {
         this.todoModal.classList.add('active');
         this.todoTextInput.focus();
+        if (editMode) {
+            const todo = this.todos.find(t => t.id === todoId);
+            if (todo) {
+                this.todoModalTitle.textContent = 'Edit Daily Task';
+                this.todoTextInput.value = todo.text;
+                this.currentEditingTodoId = todoId;
+            }
+        } else {
+            this.todoModalTitle.textContent = 'Add Daily Task';
+            this.todoTextInput.value = '';
+            this.currentEditingTodoId = null;
+        }
     }
 
     closeTodoModal() {
         this.todoModal.classList.remove('active');
         this.todoTextInput.value = '';
+        this.currentEditingTodoId = null;
     }
 
     saveTodo() {
         const text = this.todoTextInput.value.trim();
         if (!text) return;
 
-        const todo = {
-            id: Date.now(),
-            text: text,
-            completed: false,
-            date: new Date().toISOString().split('T')[0]
-        };
+        if (this.currentEditingTodoId) {
+            const todo = this.todos.find(t => t.id === this.currentEditingTodoId);
+            if (todo) {
+                todo.text = text;
+            }
+        } else {
+            const todo = {
+                id: Date.now(),
+                text: text,
+                completed: false,
+                date: new Date().toISOString().split('T')[0]
+            };
+            this.todos.push(todo);
+        }
 
-        this.todos.push(todo);
         this.saveTodosToStorage();
         this.renderTodos();
         this.closeTodoModal();
@@ -559,11 +580,11 @@ class HabitTracker {
         const todaysTodos = this.todos.filter(todo => todo.date === today);
         
         this.todosList.innerHTML = todaysTodos.map(todo => `
-            <div class="todo-item">
+            <div class="todo-item" onclick="habitTracker.openTodoModal(true, ${todo.id})">
                 <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" 
-                     onclick="habitTracker.toggleTodo(${todo.id})"></div>
+                     onclick="event.stopPropagation(); habitTracker.toggleTodo(${todo.id})"></div>
                 <span class="todo-text ${todo.completed ? 'completed' : ''}">${todo.text}</span>
-                <button class="delete-todo-btn" onclick="habitTracker.deleteTodo(${todo.id})">Delete</button>
+                <button class="delete-todo-btn" onclick="event.stopPropagation(); habitTracker.deleteTodo(${todo.id})">Delete</button>
             </div>
         `).join('');
     }
@@ -580,7 +601,7 @@ class HabitTracker {
         const modalHTML = `
             <div class="modal" id="weeklyTodoModal">
                 <div class="modal-content">
-                    <h3>Add Weekly Task</h3>
+                    <h3 id="weeklyTodoModalTitle">Add Weekly Task</h3>
                     <div class="form-group">
                         <label for="weeklyTodoText">Task:</label>
                         <input type="text" id="weeklyTodoText" required>
@@ -599,6 +620,7 @@ class HabitTracker {
         document.body.insertAdjacentHTML('beforeend', modalHTML);
         
         this.weeklyTodoModal = document.getElementById('weeklyTodoModal');
+        this.weeklyTodoModalTitle = document.getElementById('weeklyTodoModalTitle');
         this.weeklyTodoTextInput = document.getElementById('weeklyTodoText');
         this.weeklyTodoDateInput = document.getElementById('weeklyTodoDate');
         
@@ -610,19 +632,30 @@ class HabitTracker {
         document.getElementById('saveWeeklyTodo').addEventListener('click', () => this.saveWeeklyTodo());
     }
 
-    openWeeklyTodoModal() {
+    openWeeklyTodoModal(editMode = false, todoId = null) {
         this.weeklyTodoModal.classList.add('active');
         this.weeklyTodoTextInput.focus();
-        
-        // Set default date to today
-        const today = new Date().toISOString().split('T')[0];
-        this.weeklyTodoDateInput.value = today;
+        if (editMode) {
+            const todo = this.weeklyTodos.find(t => t.id === todoId);
+            if (todo) {
+                this.weeklyTodoModalTitle.textContent = 'Edit Weekly Task';
+                this.weeklyTodoTextInput.value = todo.text;
+                this.weeklyTodoDateInput.value = todo.dueDate;
+                this.currentEditingWeeklyTodoId = todoId;
+            }
+        } else {
+            this.weeklyTodoModalTitle.textContent = 'Add Weekly Task';
+            this.weeklyTodoTextInput.value = '';
+            this.weeklyTodoDateInput.value = new Date().toISOString().split('T')[0];
+            this.currentEditingWeeklyTodoId = null;
+        }
     }
 
     closeWeeklyTodoModal() {
         this.weeklyTodoModal.classList.remove('active');
         this.weeklyTodoTextInput.value = '';
         this.weeklyTodoDateInput.value = '';
+        this.currentEditingWeeklyTodoId = null;
     }
 
     saveWeeklyTodo() {
@@ -630,14 +663,22 @@ class HabitTracker {
         const date = this.weeklyTodoDateInput.value;
         if (!text || !date) return;
 
-        const todo = {
-            id: Date.now(),
-            text: text,
-            dueDate: date,
-            completed: false
-        };
+        if (this.currentEditingWeeklyTodoId) {
+            const todo = this.weeklyTodos.find(t => t.id === this.currentEditingWeeklyTodoId);
+            if (todo) {
+                todo.text = text;
+                todo.dueDate = date;
+            }
+        } else {
+            const todo = {
+                id: Date.now(),
+                text: text,
+                dueDate: date,
+                completed: false
+            };
+            this.weeklyTodos.push(todo);
+        }
 
-        this.weeklyTodos.push(todo);
         this.saveWeeklyTodosToStorage();
         this.renderWeeklyTodos();
         this.closeWeeklyTodoModal();
@@ -657,12 +698,12 @@ class HabitTracker {
         );
         
         this.weeklyTodosList.innerHTML = sortedTodos.map(todo => `
-            <div class="weekly-todo-item">
+            <div class="weekly-todo-item" onclick="habitTracker.openWeeklyTodoModal(true, ${todo.id})">
                 <div class="weekly-todo-content">
                     <span class="weekly-todo-text">${todo.text}</span>
                     <span class="weekly-todo-date">Due: ${new Date(todo.dueDate).toLocaleDateString()}</span>
                 </div>
-                <button class="delete-todo-btn" onclick="habitTracker.deleteWeeklyTodo(${todo.id})">Delete</button>
+                <button class="delete-todo-btn" onclick="event.stopPropagation(); habitTracker.deleteWeeklyTodo(${todo.id})">Delete</button>
             </div>
         `).join('');
     }
