@@ -1,3 +1,5 @@
+/* Updated CSS for Habit Tracker - Enhanced Styling */
+
 * {
     margin: 0;
     padding: 0;
@@ -5,13 +7,12 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 body.dark-mode {
@@ -24,12 +25,12 @@ body.dark-mode {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     padding: 32px;
-    max-width: 1000px;
+    max-width: 1200px;
     width: 95%;
-    margin: 20px auto;
+    margin: 0 auto;
 }
 
-.container.dark-mode {
+.dark-mode .container {
     background-color: #1e1e1e;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
@@ -41,7 +42,7 @@ header {
     text-align: center;
 }
 
-header.dark-mode {
+.dark-mode header {
     border-bottom: 1px solid #333;
 }
 
@@ -52,28 +53,8 @@ h1 {
     color: #333;
 }
 
-h1.dark-mode {
+.dark-mode h1 {
     color: #e0e0e0;
-}
-
-.quarter-selector {
-    font-size: 1.2rem;
-    color: #555;
-}
-
-.quarter-selector input {
-    width: 40px;
-    padding: 4px 8px;
-    margin: 0 5px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    -moz-appearance: textfield;
-}
-
-.quarter-selector input::-webkit-outer-spin-button,
-.quarter-selector input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
 }
 
 .time-selector {
@@ -81,6 +62,7 @@ h1.dark-mode {
     color: #555;
     display: flex;
     align-items: center;
+    justify-content: center; /* Center-align content horizontally */
     gap: 24px;
     background: #f8f8f8;
     padding: 12px 16px;
@@ -88,7 +70,7 @@ h1.dark-mode {
     margin-top: 8px;
 }
 
-.time-selector.dark-mode {
+.dark-mode .time-selector {
     background: #333;
     color: #e0e0e0;
 }
@@ -96,8 +78,8 @@ h1.dark-mode {
 .selector-group {
     display: flex;
     align-items: center;
+    justify-content: center; /* Center-align content horizontally */
     gap: 12px;
-    justify-content: center; /* Center the selector-group */
 }
 
 .selector-buttons {
@@ -107,6 +89,11 @@ h1.dark-mode {
     border-radius: 6px;
     padding: 4px;
     border: 1px solid #ddd;
+}
+
+.dark-mode .selector-buttons {
+    background: #333;
+    border: 1px solid #444;
 }
 
 .selector-btn {
@@ -124,7 +111,7 @@ h1.dark-mode {
     transition: all 0.2s ease;
 }
 
-.selector-btn.dark-mode {
+.dark-mode .selector-btn {
     color: #e0e0e0;
 }
 
@@ -132,16 +119,8 @@ h1.dark-mode {
     background: #f0f0f0;
 }
 
-.selector-btn.dark-mode:hover {
+.dark-mode .selector-btn:hover {
     background: #444;
-}
-
-.selector-btn:active {
-    background: #e0e0e0;
-}
-
-.selector-btn.dark-mode:active {
-    background: #555;
 }
 
 #yearDisplay,
@@ -153,18 +132,35 @@ h1.dark-mode {
     padding: 0 8px;
 }
 
+.dark-mode #yearDisplay,
+.dark-mode #quarterDisplay {
+    color: #e0e0e0;
+}
+
 #yearDisplay {
     min-width: 70px;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.tracker-container {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .tracker-container {
+    background: #1e1e1e;
 }
 
 .tracker-grid {
     display: flex;
     gap: 24px;
-    align-items: flex-start;
-}
-
-.tracker-grid.dark-mode {
-    color: #e0e0e0;
 }
 
 .dates-column {
@@ -185,7 +181,7 @@ h1.dark-mode {
     margin-bottom: 2px;
 }
 
-.date-cell.dark-mode {
+.dark-mode .date-cell {
     color: #888;
 }
 
@@ -211,6 +207,10 @@ h1.dark-mode {
     font-size: 0.95rem;
 }
 
+.dark-mode .month-header {
+    color: #e0e0e0;
+}
+
 .habit-header-row {
     display: flex;
     gap: 2px;
@@ -221,7 +221,7 @@ h1.dark-mode {
 .habit-header {
     width: 32px;
     height: 8px;
-    background-color: var(--habit-color);
+    background-color: var(--habit-color, #2196F3);
     border-radius: 2px;
 }
 
@@ -241,7 +241,7 @@ h1.dark-mode {
     transition: all 0.2s ease;
 }
 
-.habit-cell.dark-mode {
+.dark-mode .habit-cell {
     border-color: #444;
 }
 
@@ -250,17 +250,12 @@ h1.dark-mode {
     background-color: #f8f8f8;
 }
 
-.habit-cell.dark-mode:hover {
+.dark-mode .habit-cell:hover {
     border-color: #666;
     background-color: #333;
 }
 
 .habit-cell.checked {
-    background-color: var(--habit-color, #2196F3);
-    border-color: var(--habit-color, #2196F3);
-}
-
-.habit-cell.checked.dark-mode {
     background-color: var(--habit-color, #2196F3);
     border-color: var(--habit-color, #2196F3);
 }
@@ -271,7 +266,7 @@ h1.dark-mode {
     cursor: not-allowed;
 }
 
-.habit-cell.disabled.dark-mode {
+.dark-mode .habit-cell.disabled {
     background-color: #444;
     border-color: #555;
 }
@@ -281,38 +276,31 @@ h1.dark-mode {
     box-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
 }
 
-.habit-cell.today.dark-mode {
+.dark-mode .habit-cell.today {
     border: 2px solid #FF9800;
     box-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
 }
 
-.side-panel {
-    margin-left: 32px;
-    min-width: 240px;
-    border-left: 1px solid #eee;
-    padding-left: 32px;
+.management-panel {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
 }
 
-.side-panel.dark-mode {
-    border-left: 1px solid #333;
+.dark-mode .management-panel {
+    background: #1e1e1e;
 }
 
-.habits-section, .rewards-section {
+.panel-section {
     margin-bottom: 32px;
 }
 
-.habits-section.dark-mode, .rewards-section.dark-mode, .goals-section.dark-mode, .todos-section.dark-mode, .weekly-todos-section.dark-mode, .journals-section.dark-mode, .streaks-section.dark-mode {
-    color: #e0e0e0;
-}
-
-h3 {
-    margin-bottom: 12px;
-    font-weight: 500;
-    color: #444;
-    font-size: 1.1rem;
-}
-
-.habits-list {
+.habits-list, .goals-list, .todos-list, 
+.weekly-todos-list, .journals-list, .streaks-list {
     min-height: 150px;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -323,15 +311,19 @@ h3 {
     gap: 10px;
 }
 
-.habits-list.dark-mode, .goals-list.dark-mode, .todos-list.dark-mode, .weekly-todos-list.dark-mode, .journals-list.dark-mode {
+.dark-mode .habits-list,
+.dark-mode .goals-list,
+.dark-mode .todos-list,
+.dark-mode .weekly-todos-list,
+.dark-mode .journals-list {
     background-color: #2e2e2e;
     border: 1px solid #444;
 }
 
-.habit-item {
+.habit-item, .goal-item, .todo-item, 
+.weekly-todo-item, .journal-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 12px 16px;
     background: white;
     border: 1px solid #eee;
@@ -339,17 +331,26 @@ h3 {
     transition: all 0.2s ease;
 }
 
-.habit-item.dark-mode, .goal-item.dark-mode, .todo-item.dark-mode, .weekly-todo-item.dark-mode, .journal-item.dark-mode {
+.dark-mode .habit-item,
+.dark-mode .goal-item,
+.dark-mode .todo-item,
+.dark-mode .weekly-todo-item,
+.dark-mode .journal-item {
     background: #333;
     border: 1px solid #444;
 }
 
-.habit-item:hover {
+.habit-item:hover, .goal-item:hover, .todo-item:hover, 
+.weekly-todo-item:hover, .journal-item:hover {
     border-color: #ddd;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.habit-item.dark-mode:hover, .goal-item.dark-mode:hover, .todo-item.dark-mode:hover, .weekly-todo-item.dark-mode:hover, .journal-item.dark-mode:hover {
+.dark-mode .habit-item:hover,
+.dark-mode .goal-item:hover,
+.dark-mode .todo-item:hover,
+.dark-mode .weekly-todo-item:hover,
+.dark-mode .journal-item:hover {
     border-color: #555;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
@@ -365,13 +366,14 @@ h3 {
     flex-grow: 1;
 }
 
-.habit-item .streak-count {
+.streak-count {
     font-weight: bold;
     color: #2196F3;
     margin-left: 10px;
 }
 
-.delete-habit-btn {
+.delete-habit-btn, .delete-goal-btn, 
+.delete-todo-btn, .delete-journal-btn {
     background: #ff4444;
     color: white;
     border: none;
@@ -383,24 +385,20 @@ h3 {
     transition: all 0.2s ease;
 }
 
-.delete-habit-btn.dark-mode, .delete-goal-btn.dark-mode, .delete-todo-btn.dark-mode, .delete-journal-btn.dark-mode {
-    background: #ff4444;
-}
-
-.delete-habit-btn:hover {
+.delete-habit-btn:hover, .delete-goal-btn:hover, 
+.delete-todo-btn:hover, .delete-journal-btn:hover {
     background: #cc0000;
     transform: translateY(-1px);
 }
 
-.delete-habit-btn.dark-mode:hover, .delete-goal-btn.dark-mode:hover, .delete-todo-btn.dark-mode:hover, .delete-journal-btn.dark-mode:hover {
-    background: #cc0000;
-}
-
-.delete-habit-btn:active {
+.delete-habit-btn:active, .delete-goal-btn:active, 
+.delete-todo-btn:active, .delete-journal-btn:active {
     transform: translateY(0px);
 }
 
-.add-habit-btn {
+.add-habit-btn, .add-goal-btn, 
+.add-todo-btn, .add-weekly-todo-btn, 
+.add-journal-btn {
     margin-top: 12px;
     background: #2196F3;
     color: white;
@@ -410,55 +408,308 @@ h3 {
     cursor: pointer;
     font-size: 1rem;
     width: 100%;
+    transition: all 0.2s ease;
 }
 
-.add-habit-btn.dark-mode, .add-goal-btn.dark-mode, .add-todo-btn.dark-mode, .add-weekly-todo-btn.dark-mode, .add-journal-btn.dark-mode {
+.add-habit-btn:hover, .add-goal-btn:hover, 
+.add-todo-btn:hover, .add-weekly-todo-btn:hover, 
+.add-journal-btn:hover {
+    background: #1976D2;
+}
+
+.goal-checkbox, .todo-checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid #2196F3;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin-right: 10px;
+}
+
+.todo-checkbox {
+    border-color: #4CAF50;
+}
+
+.goal-checkbox.checked, .todo-checkbox.checked {
+    background-color: #2196F3;
+}
+
+.todo-checkbox.checked {
+    background-color: #4CAF50;
+}
+
+.goal-checkbox.checked::after, .todo-checkbox.checked::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+}
+
+.goal-text, .todo-text {
+    flex-grow: 1;
+}
+
+.todo-text.completed {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.weekly-todo-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.weekly-todo-date {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.journal-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.journal-nav-btn {
     background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
 }
 
-.add-habit-btn:hover {
+.journal-nav-btn:hover {
     background: #1976D2;
 }
 
-.add-habit-btn.dark-mode:hover, .add-goal-btn.dark-mode:hover, .add-todo-btn.dark-mode:hover, .add-weekly-todo-btn.dark-mode:hover, .add-journal-btn.dark-mode:hover {
-    background: #1976D2;
+.journal-date {
+    font-size: 0.9rem;
+    color: #888;
 }
 
-/* Mobile responsive styles */
+.journal-text {
+    font-size: 1rem;
+    color: #333;
+    white-space: pre-wrap;
+    margin-bottom: 8px;
+}
+
+.dark-mode .journal-text {
+    color: #e0e0e0;
+}
+
+.streaks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.streak-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.streak-name {
+    flex-grow: 1;
+}
+
+.streak-loader {
+    width: 100px;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+.streak-fill {
+    height: 100%;
+    background-color: var(--habit-color, #2196F3);
+    transition: width 0.3s ease;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .modal-content {
+    background: #2e2e2e;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content h3 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.dark-mode .modal-content h3 {
+    color: #e0e0e0;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.dark-mode .form-group label {
+    color: #e0e0e0;
+}
+
+.form-group input, 
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.dark-mode .form-group input,
+.dark-mode .form-group textarea {
+    background: #444;
+    color: #e0e0e0;
+    border: 1px solid #555;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.modal-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-btn.cancel {
+    background: #eee;
+}
+
+.dark-mode .modal-btn.cancel {
+    background: #555;
+}
+
+.modal-btn.save {
+    background: #2196F3;
+    color: white;
+}
+
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #555;
+    transition: color 0.3s ease;
+    margin-left: 16px;
+}
+
+.dark-mode-toggle:hover {
+    color: #333;
+}
+
+.dark-mode .dark-mode-toggle {
+    color: #e0e0e0;
+}
+
+.dark-mode .dark-mode-toggle:hover {
+    color: #fff;
+}
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+.loading-spinner {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #2196F3;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.loading .loading-spinner {
+    display: block;
+}
+
+/* Responsive Styles */
 @media (max-width: 768px) {
-    body {
-        padding: 8px;
-    }
-
     .container {
         padding: 16px;
-        margin: 10px;
-    }
-
-    h1 {
-        font-size: 1.8rem;
     }
 
     .time-selector {
+        flex-direction: column;
         gap: 16px;
-        padding: 10px;
-    }
-
-    .selector-group {
-        gap: 8px;
-    }
-
-    .selector-btn {
-        width: 28px;
-        height: 28px;
-        font-size: 1rem;
     }
 
     .tracker-grid {
         gap: 12px;
         overflow-x: auto;
         padding-bottom: 16px;
-        /* Smooth scrolling on iOS */
         -webkit-overflow-scrolling: touch;
     }
 
@@ -473,6 +724,10 @@ h3 {
         left: 0;
         background: white;
         z-index: 2;
+    }
+
+    .dark-mode .dates-column {
+        background: #1e1e1e;
     }
 
     .month-header {
@@ -490,48 +745,33 @@ h3 {
         height: 28px;
     }
 
-    .side-panel {
-        margin-left: 16px;
-        padding-left: 16px;
-        min-width: 180px;
-    }
-
-    .habit-item {
-        padding: 8px 12px;
-    }
-
-    .delete-habit-btn {
-        padding: 4px 8px;
-        font-size: 0.8rem;
+    .management-panel {
+        grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 480px) {
-    body {
-        padding: 0;
-    }
-
     .container {
         padding: 12px;
-        width: 100%;
-        margin: 0;
-        border-radius: 0;
-        box-shadow: none;
     }
 
     h1 {
-        font-size: 1.5rem;
-        margin-bottom: 12px;
+        font-size: 1.8rem;
     }
 
     .time-selector {
-        flex-direction: column;
-        align-items: stretch;
         gap: 12px;
+        padding: 10px;
     }
 
     .selector-group {
-        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .selector-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
     }
 
     .tracker-grid {
@@ -559,907 +799,12 @@ h3 {
         height: 6px;
     }
 
-    /* Make the side panel a bottom sheet on mobile */
-    .side-panel {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: 0;
-        padding: 16px;
-        background: white;
-        border-top: 1px solid #eee;
-        border-left: none;
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        z-index: 100;
-        max-height: 60vh;
-        overflow-y: auto;
-        border-radius: 16px 16px 0 0;
-    }
-
-    .habits-section {
-        margin-bottom: 16px;
-    }
-
-    .habits-list {
-        max-height: 40vh;
-        overflow-y: auto;
-    }
-
-    /* Add a floating action button for adding habits on mobile */
-    .add-habit-btn {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: auto;
-        padding: 12px;
-        border-radius: 50%;
-        aspect-ratio: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        z-index: 101;
-    }
-
-    /* Adjust modal for mobile */
-    .modal-content {
-        width: 100%;
-        margin: 16px;
-        padding: 16px;
-    }
-
-    .form-group input {
-        font-size: 16px; /* Prevent zoom on iOS */
-    }
-
     .button-text {
         display: none;
     }
 
     .button-icon {
         display: block;
+        font-size: 24px;
     }
-}
-
-/* Add smooth scrolling for the entire page */
-@media (hover: none) and (pointer: coarse) {
-    html {
-        scroll-behavior: smooth;
-    }
-}
-
-/* Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal.active {
-    display: flex;
-}
-
-.modal-content {
-    background: white;
-    padding: 24px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 400px;
-}
-
-.modal-content.dark-mode {
-    background: #2e2e2e;
-    color: #e0e0e0;
-}
-
-.modal-content h3 {
-    margin-bottom: 20px;
-}
-
-.modal-content.dark-mode h3 {
-    color: #e0e0e0;
-}
-
-.form-group {
-    margin-bottom: 16px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #555;
-}
-
-.form-group.dark-mode label {
-    color: #e0e0e0;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.form-group.dark-mode input, .form-group.dark-mode textarea {
-    background: #444;
-    color: #e0e0e0;
-    border: 1px solid #555;
-}
-
-.modal-buttons {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-}
-
-.modal-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.modal-btn.cancel {
-    background: #eee;
-}
-
-.modal-btn.dark-mode.cancel {
-    background: #555;
-}
-
-.modal-btn.save {
-    background: #2196F3;
-    color: white;
-}
-
-.modal-btn.dark-mode.save {
-    background: #2196F3;
-}
-
-.button-text {
-    display: block;
-}
-
-.button-icon {
-    display: none;
-    font-size: 24px;
-}
-
-@media (max-width: 480px) {
-    .button-text {
-        display: none;
-    }
-
-    .button-icon {
-        display: block;
-    }
-}
-
-/* Update styles for goals section */
-.goals-section {
-    margin-bottom: 32px;
-}
-
-.goals-list {
-    min-height: 150px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    background-color: #fafafa;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.goal-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    background: white;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-
-.goal-item.dark-mode {
-    background: #333;
-    border: 1px solid #444;
-}
-
-.goal-item:hover {
-    border-color: #ddd;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.goal-item.dark-mode:hover {
-    border-color: #555;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.goal-checkbox {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
-    border: 2px solid #2196F3;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-}
-
-.goal-checkbox.checked {
-    background-color: #2196F3;
-}
-
-.goal-checkbox.checked::after {
-    content: '✓';
-    color: white;
-    font-size: 14px;
-}
-
-.goal-text {
-    flex-grow: 1;
-}
-
-.delete-goal-btn {
-    background: #ff4444;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-}
-
-.delete-goal-btn.dark-mode {
-    background: #ff4444;
-}
-
-.delete-goal-btn:hover {
-    background: #cc0000;
-    transform: translateY(-1px);
-}
-
-.delete-goal-btn.dark-mode:hover {
-    background: #cc0000;
-}
-
-.delete-goal-btn:active {
-    transform: translateY(0px);
-}
-
-.add-goal-btn {
-    margin-top: 12px;
-    background: #2196F3;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 1rem;
-    width: 100%;
-}
-
-.add-goal-btn.dark-mode {
-    background: #2196F3;
-}
-
-.add-goal-btn:hover {
-    background: #1976D2;
-}
-
-.add-goal-btn.dark-mode:hover {
-    background: #1976D2;
-}
-
-/* Add styles for todo section */
-.todos-section {
-    margin-bottom: 32px;
-}
-
-.todos-list {
-    min-height: 150px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    background-color: #fafafa;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.todos-list.dark-mode {
-    background-color: #2e2e2e;
-    border: 1px solid #444;
-}
-
-.todo-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    background: white;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-
-.todo-item.dark-mode {
-    background: #333;
-    border: 1px solid #444;
-}
-
-.todo-item:hover {
-    border-color: #ddd;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.todo-item.dark-mode:hover {
-    border-color: #555;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.todo-checkbox {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
-    border: 2px solid #4CAF50;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-}
-
-.todo-checkbox.checked {
-    background-color: #4CAF50;
-}
-
-.todo-checkbox.checked::after {
-    content: '✓';
-    color: white;
-    font-size: 14px;
-}
-
-.todo-text {
-    flex-grow: 1;
-}
-
-.todo-text.completed {
-    text-decoration: line-through;
-    color: #888;
-}
-
-.delete-todo-btn {
-    background: #ff4444;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-}
-
-.delete-todo-btn.dark-mode {
-    background: #ff4444;
-}
-
-.delete-todo-btn:hover {
-    background: #cc0000;
-    transform: translateY(-1px);
-}
-
-.delete-todo-btn.dark-mode:hover {
-    background: #cc0000;
-}
-
-.delete-todo-btn:active {
-    transform: translateY(0px);
-}
-
-.add-todo-btn {
-    margin-top: 12px;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 1rem;
-    width: 100%;
-}
-
-.add-todo-btn.dark-mode {
-    background: #2196F3;
-}
-
-.add-todo-btn:hover {
-    background: #388E3C;
-}
-
-.add-todo-btn.dark-mode:hover {
-    background: #1976D2;
-}
-
-/* Add styles for weekly todo section */
-.weekly-todos-section {
-    margin-bottom: 32px;
-}
-
-.weekly-todos-list {
-    min-height: 150px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    background-color: #fafafa;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.weekly-todos-list.dark-mode {
-    background-color: #2e2e2e;
-    border: 1px solid #444;
-}
-
-.weekly-todo-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    background: white;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-
-.weekly-todo-item.dark-mode {
-    background: #333;
-    border: 1px solid #444;
-}
-
-.weekly-todo-item:hover {
-    border-color: #ddd;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.weekly-todo-item.dark-mode:hover {
-    border-color: #555;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.weekly-todo-content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.weekly-todo-text {
-    flex-grow: 1;
-}
-
-.weekly-todo-date {
-    font-size: 0.85rem;
-    color: #666;
-}
-
-.add-weekly-todo-btn {
-    margin-top: 12px;
-    background: #9C27B0;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 1rem;
-    width: 100%;
-}
-
-.add-weekly-todo-btn.dark-mode {
-    background: #2196F3;
-}
-
-.add-weekly-todo-btn:hover {
-    background: #7B1FA2;
-}
-
-.add-weekly-todo-btn.dark-mode:hover {
-    background: #1976D2;
-}
-
-/* Add date input styles */
-.form-group.date-input {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.form-group.date-input input[type="date"] {
-    flex-grow: 1;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-/* Add these new styles and update existing ones */
-
-.main-content {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-}
-
-.tracker-container {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.tracker-grid {
-    display: flex;
-    gap: 24px;
-}
-
-.management-panel {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 16px;
-}
-
-/* Update mobile styles */
-@media (max-width: 768px) {
-    .main-content {
-        gap: 16px;
-    }
-
-    .tracker-container {
-        padding: 16px;
-        overflow-x: auto;
-    }
-
-    .management-panel {
-        padding: 16px;
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-    .tracker-container {
-        padding: 12px;
-    }
-
-    .management-panel {
-        padding: 12px;
-    }
-
-    /* Remove the fixed positioning from side panel */
-    .side-panel {
-        position: static;
-        margin: 0;
-        padding: 16px;
-        border-radius: 0;
-        box-shadow: none;
-        max-height: none;
-    }
-}
-
-.streak-tracker {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-    color: #666;
-}
-
-.streak-count {
-    font-weight: bold;
-    color: #2196F3;
-}
-
-.header-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.streaks-section {
-    margin-top: 32px;
-}
-
-.streaks-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.streak-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.streak-item .streak-name {
-    flex-grow: 1;
-}
-
-.streak-item .streak-loader {
-    width: 100px;
-    height: 10px;
-    background-color: #e0e0e0;
-    border-radius: 5px;
-    overflow: hidden;
-    position: relative;
-}
-
-.streak-item .streak-fill {
-    height: 100%;
-    background-color: var(--habit-color, #2196F3);
-    transition: width 0.3s ease;
-}
-
-.journals-section {
-    margin-bottom: 32px;
-}
-
-.journal-navigation {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
-}
-
-.journal-nav-btn {
-    background: #2196F3;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-}
-
-.journal-nav-btn:hover {
-    background: #1976D2;
-}
-
-.journals-list {
-    min-height: 150px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    background-color: #fafafa;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.journals-list.dark-mode {
-    background-color: #2e2e2e;
-    border: 1px solid #444;
-}
-
-.journal-item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px 16px;
-    background: white;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-
-.journal-item.dark-mode {
-    background: #333;
-    border: 1px solid #444;
-}
-
-.journal-item:hover {
-    border-color: #ddd;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.journal-item.dark-mode:hover {
-    border-color: #555;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.journal-date {
-    font-size: 0.9rem;
-    color: #888;
-}
-
-.journal-text {
-    font-size: 1rem;
-    color: #333;
-    white-space: pre-wrap; /* Preserve line breaks */
-}
-
-.delete-journal-btn {
-    background: #ff4444;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-    align-self: flex-end; /* Align button to the right */
-}
-
-.delete-journal-btn.dark-mode {
-    background: #ff4444;
-}
-
-.delete-journal-btn:hover {
-    background: #cc0000;
-    transform: translateY(-1px);
-}
-
-.delete-journal-btn.dark-mode:hover {
-    background: #cc0000;
-}
-
-.delete-journal-btn:active {
-    transform: translateY(0px);
-}
-
-.add-journal-btn {
-    margin-top: 12px;
-    background: #2196F3;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 1rem;
-    width: 100%;
-}
-
-.add-journal-btn.dark-mode {
-    background: #2196F3;
-}
-
-.add-journal-btn:hover {
-    background: #1976D2;
-}
-
-.add-journal-btn.dark-mode:hover {
-    background: #1976D2;
-}
-
-/* Modal styles for journal */
-#journalModal .modal-content {
-    width: 90%;
-    max-width: 600px;
-}
-
-#journalModal .form-group textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    resize: vertical; /* Allow vertical resizing */
-}
-
-#journalModal .form-group label {
-    margin-top: 12px;
-}
-
-.delete-journal-btn {
-    background: #ff4444;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-}
-
-.delete-journal-btn.dark-mode {
-    background: #ff4444;
-}
-
-.delete-journal-btn:hover {
-    background: #cc0000;
-    transform: translateY(-1px);
-}
-
-.delete-journal-btn.dark-mode:hover {
-    background: #cc0000;
-}
-
-.delete-journal-btn:active {
-    transform: translateY(0px);
-}
-
-.add-journal-btn {
-    margin-top: 12px;
-    background: #2196F3;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 1rem;
-    width: 100%;
-}
-
-.add-journal-btn.dark-mode {
-    background: #2196F3;
-}
-
-.add-journal-btn:hover {
-    background: #1976D2;
-}
-
-.add-journal-btn.dark-mode:hover {
-    background: #1976D2;
-}
-
-#goalModal .form-group textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    resize: vertical; /* Allow vertical resizing */
-}
-
-#goalModal .form-group label {
-    margin-top: 20px;
-}
-
-/* Add styles for larger goal system textarea */
-#goalSystem {
-    height: 500px; /* Further increase height */
-}
-
-/* Add styles for larger goal system textarea */
-#goalSystem {
-    height: 500px; /* Increase height */
-}
-
-.dark-mode-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-    color: #555;
-    transition: color 0.3s ease;
-    margin-left: 16px;
-}
-
-.dark-mode-toggle:hover {
-    color: #333;
-}
-
-body.dark-mode .dark-mode-toggle {
-    color: #e0e0e0;
-}
-
-body.dark-mode .dark-mode-toggle:hover {
-    color: #fff;
 }
