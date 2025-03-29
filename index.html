@@ -102,7 +102,11 @@
                 </div>
             </div>
         </div>
-        <button id="exportDataBtn" class="export-data-btn" aria-label="Export Data">📤 Export Data</button>
+        <div class="import-export-buttons">
+            <button id="exportDataBtn" class="export-data-btn" aria-label="Export Data">📤 Export Data</button>
+            <label for="importDataInput" class="import-data-label">📥 Import Data</label>
+            <input type="file" id="importDataInput" class="import-data-input" accept=".json">
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

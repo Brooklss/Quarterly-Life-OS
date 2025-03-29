@@ -398,6 +398,7 @@ class HabitTracker {
         this.prevJournalBtn.addEventListener('click', () => this.showPreviousJournal());
         this.nextJournalBtn.addEventListener('click', () => this.showNextJournal());
         document.getElementById('exportDataBtn').addEventListener('click', () => this.exportData());
+        document.getElementById('importDataInput').addEventListener('change', (event) => this.importData(event));
     }
 
     setupGoalsModal() {
@@ -981,6 +982,43 @@ class HabitTracker {
         a.click();
 
         URL.revokeObjectURL(url);
+    }
+
+    importData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const importedData = JSON.parse(e.target.result);
+
+                // Update state with imported data
+                this.habits = importedData.habits || [];
+                this.habitData = importedData.habitData || {};
+                this.goals = importedData.goals || [];
+                this.todos = importedData.todos || [];
+                this.weeklyTodos = importedData.weeklyTodos || [];
+                this.journals = importedData.journals || [];
+                this.currentYear = importedData.currentYear || this.currentYear;
+                this.currentQuarter = importedData.currentQuarter || this.currentQuarter;
+
+                // Save imported data to local storage
+                this.saveHabitsToStorage();
+                this.saveToLocalStorage();
+                this.saveGoalsToStorage();
+                this.saveTodosToStorage();
+                this.saveWeeklyTodosToStorage();
+                this.saveJournalsToStorage();
+
+                // Reload the application state
+                this.loadData();
+                alert('Data imported successfully!');
+            } catch (error) {
+                alert('Failed to import data. Please ensure the file is a valid JSON.');
+            }
+        };
+        reader.readAsText(file);
     }
 
     moveExportButton() {

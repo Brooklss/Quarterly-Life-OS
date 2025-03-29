@@ -731,6 +731,33 @@ h1 {
     background: #388E3C;
 }
 
+.import-export-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.import-data-label {
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.import-data-label:hover {
+    background: #1976D2;
+}
+
+.import-data-input {
+    display: none;
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
     .container {
