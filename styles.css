@@ -148,10 +148,15 @@ h1 {
 }
 
 .tracker-container {
+    display: block; /* Default to visible */
     background: white;
     border-radius: 12px;
     padding: 24px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.tracker-container.hidden {
+    display: none; /* Hide when no habits exist */
 }
 
 .dark-mode .tracker-container {
@@ -315,7 +320,8 @@ h1 {
 .dark-mode .goals-list,
 .dark-mode .todos-list,
 .dark-mode .weekly-todos-list,
-.dark-mode .journals-list {
+.dark-mode .journals-list,
+.dark-mode .streaks-list {
     background-color: #2e2e2e;
     border: 1px solid #444;
 }
@@ -512,6 +518,11 @@ h1 {
     gap: 16px;
 }
 
+.dark-mode .streaks-list {
+    background-color: #2e2e2e;
+    border: 1px solid #444;
+}
+
 .streak-item {
     display: flex;
     align-items: center;
@@ -520,6 +531,11 @@ h1 {
 
 .streak-name {
     flex-grow: 1;
+    color: #333;
+}
+
+.dark-mode .streak-name {
+    color: #e0e0e0;
 }
 
 .streak-loader {
@@ -529,6 +545,10 @@ h1 {
     border-radius: 5px;
     overflow: hidden;
     position: relative;
+}
+
+.dark-mode .streak-loader {
+    background-color: #444;
 }
 
 .streak-fill {
@@ -693,6 +713,22 @@ h1 {
 
 .loading .loading-spinner {
     display: block;
+}
+
+.export-data-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 16px;
+    transition: all 0.2s ease;
+}
+
+.export-data-btn:hover {
+    background: #388E3C;
 }
 
 /* Responsive Styles */

@@ -11,6 +11,7 @@ class HabitTracker {
         this.setupTodosModal();
         this.setupWeeklyTodosModal();
         this.setupDarkModeToggle();
+        this.moveExportButton();
     }
 
     setInitialDate() {
@@ -40,6 +41,7 @@ class HabitTracker {
         this.addJournalBtn = document.getElementById('addJournalBtn');
         this.prevJournalBtn = document.getElementById('prevJournalBtn');
         this.nextJournalBtn = document.getElementById('nextJournalBtn');
+        this.mainContent = document.querySelector('.main-content');
         
         // Set initial display values
         this.yearDisplay.textContent = this.currentYear;
@@ -216,6 +218,11 @@ class HabitTracker {
                 <button class="delete-habit-btn" onclick="event.stopPropagation(); habitTracker.deleteHabit(${habit.id})">Delete</button>
             </div>
         `).join('');
+
+        // Hide tracker container if no habits exist
+        const trackerContainer = document.querySelector('.tracker-container');
+        trackerContainer.style.display = this.habits.length > 0 ? 'block' : 'none';
+
         this.renderStreaks();
     }
 
@@ -390,6 +397,7 @@ class HabitTracker {
         this.addJournalBtn.addEventListener('click', () => this.openJournalModal());
         this.prevJournalBtn.addEventListener('click', () => this.showPreviousJournal());
         this.nextJournalBtn.addEventListener('click', () => this.showNextJournal());
+        document.getElementById('exportDataBtn').addEventListener('click', () => this.exportData());
     }
 
     setupGoalsModal() {
@@ -949,6 +957,35 @@ class HabitTracker {
                 el.classList.toggle('dark-mode');
             });
         });
+    }
+
+    exportData() {
+        const data = {
+            habits: this.habits,
+            habitData: this.habitData,
+            goals: this.goals,
+            todos: this.todos,
+            weeklyTodos: this.weeklyTodos,
+            journals: this.journals,
+            currentYear: this.currentYear,
+            currentQuarter: this.currentQuarter
+        };
+
+        const dataStr = JSON.stringify(data, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `habit_tracker_data_${this.currentYear}_Q${this.currentQuarter}.json`;
+        a.click();
+
+        URL.revokeObjectURL(url);
+    }
+
+    moveExportButton() {
+        const exportButton = document.getElementById('exportDataBtn');
+        this.mainContent.appendChild(exportButton);
     }
 }
 
