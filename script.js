@@ -182,20 +182,20 @@ class HabitTracker {
     }
 
     deleteHabit(habitId) {
-        this.habits = this.habits.filter(h => h.id !== habitId);
-        this.saveHabitsToStorage();
-        
-        const updatedHabitData = {};
-        for (let key in this.habitData) {
-            if (!key.includes(`-${habitId}`)) {
-                updatedHabitData[key] = this.habitData[key];
+        this.openConfirmationModal('Do you really want to delete this habit?', () => {
+            this.habits = this.habits.filter(h => h.id !== habitId);
+            this.saveHabitsToStorage();
+            const updatedHabitData = {};
+            for (let key in this.habitData) {
+                if (!key.includes(`-${habitId}`)) {
+                    updatedHabitData[key] = this.habitData[key];
+                }
             }
-        }
-        this.habitData = updatedHabitData;
-        this.saveToLocalStorage();
-        
-        this.renderHabits();
-        this.createGrid();
+            this.habitData = updatedHabitData;
+            this.saveToLocalStorage();
+            this.renderHabits();
+            this.createGrid();
+        });
     }
 
     renderStreaks() {
@@ -353,6 +353,8 @@ class HabitTracker {
         this.renderWeeklyTodos();
         this.renderJournals();
         this.checkWeeklyTodos();
+        this.checkRepeatingTodos();
+        this.checkRepeatingWeeklyTodos();
     }
 
     addEventListeners() {
@@ -497,9 +499,11 @@ class HabitTracker {
     }
 
     deleteGoal(goalId) {
-        this.goals = this.goals.filter(g => g.id !== goalId);
-        this.saveGoalsToStorage();
-        this.renderGoals();
+        this.openConfirmationModal('Do you really want to delete this goal?', () => {
+            this.goals = this.goals.filter(g => g.id !== goalId);
+            this.saveGoalsToStorage();
+            this.renderGoals();
+        });
     }
 
     renderGoals() {
@@ -530,6 +534,34 @@ class HabitTracker {
                         <label for="todoText">Task:</label>
                         <input type="text" id="todoText" required>
                     </div>
+                    <div class="form-group">
+                        <label for="todoRepeat">Repeat:</label>
+                        <select id="todoRepeat">
+                            <option value="none">None</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="custom">Custom Days</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="customDaysContainer" style="display: none;">
+                        <label>Select Days:</label>
+                        <div class="days-selector">
+                            <input type="checkbox" id="day-sun" value="0">
+                            <label for="day-sun">Sun</label>
+                            <input type="checkbox" id="day-mon" value="1">
+                            <label for="day-mon">Mon</label>
+                            <input type="checkbox" id="day-tue" value="2">
+                            <label for="day-tue">Tue</label>
+                            <input type="checkbox" id="day-wed" value="3">
+                            <label for="day-wed">Wed</label>
+                            <input type="checkbox" id="day-thu" value="4">
+                            <label for="day-thu">Thu</label>
+                            <input type="checkbox" id="day-fri" value="5">
+                            <label for="day-fri">Fri</label>
+                            <input type="checkbox" id="day-sat" value="6">
+                            <label for="day-sat">Sat</label>
+                        </div>
+                    </div>
                     <div class="modal-buttons">
                         <button class="modal-btn cancel" id="cancelTodo">Cancel</button>
                         <button class="modal-btn save" id="saveTodo">Save</button>
@@ -538,11 +570,18 @@ class HabitTracker {
             </div>
         `;
         document.body.insertAdjacentHTML('beforeend', modalHTML);
-        
+
         this.todoModal = document.getElementById('todoModal');
         this.todoModalTitle = document.getElementById('todoModalTitle');
         this.todoTextInput = document.getElementById('todoText');
-        
+        this.todoRepeatInput = document.getElementById('todoRepeat');
+        this.customDaysContainer = document.getElementById('customDaysContainer');
+        this.customDaysCheckboxes = this.customDaysContainer.querySelectorAll('input[type="checkbox"]');
+
+        this.todoRepeatInput.addEventListener('change', () => {
+            this.customDaysContainer.style.display = this.todoRepeatInput.value === 'custom' ? 'block' : 'none';
+        });
+
         document.getElementById('cancelTodo').addEventListener('click', () => this.closeTodoModal());
         document.getElementById('saveTodo').addEventListener('click', () => this.saveTodo());
     }
@@ -555,11 +594,19 @@ class HabitTracker {
             if (todo) {
                 this.todoModalTitle.textContent = 'Edit Daily Task';
                 this.todoTextInput.value = todo.text;
+                this.todoRepeatInput.value = todo.repeat || 'none';
+                this.customDaysCheckboxes.forEach(checkbox => {
+                    checkbox.checked = todo.customDays?.includes(parseInt(checkbox.value)) || false;
+                });
+                this.customDaysContainer.style.display = todo.repeat === 'custom' ? 'block' : 'none';
                 this.currentEditingTodoId = todoId;
             }
         } else {
             this.todoModalTitle.textContent = 'Add Daily Task';
             this.todoTextInput.value = '';
+            this.todoRepeatInput.value = 'none';
+            this.customDaysCheckboxes.forEach(checkbox => (checkbox.checked = false));
+            this.customDaysContainer.style.display = 'none';
             this.currentEditingTodoId = null;
         }
     }
@@ -567,24 +614,33 @@ class HabitTracker {
     closeTodoModal() {
         this.todoModal.classList.remove('active');
         this.todoTextInput.value = '';
+        this.todoRepeatInput.value = 'none';
         this.currentEditingTodoId = null;
     }
 
     saveTodo() {
         const text = this.todoTextInput.value.trim();
+        const repeat = this.todoRepeatInput.value;
+        const customDays = Array.from(this.customDaysCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => parseInt(checkbox.value));
         if (!text) return;
 
         if (this.currentEditingTodoId) {
             const todo = this.todos.find(t => t.id === this.currentEditingTodoId);
             if (todo) {
                 todo.text = text;
+                todo.repeat = repeat;
+                todo.customDays = repeat === 'custom' ? customDays : [];
             }
         } else {
             const todo = {
                 id: Date.now(),
                 text: text,
                 completed: false,
-                date: new Date().toISOString().split('T')[0]
+                date: new Date().toISOString().split('T')[0],
+                repeat: repeat,
+                customDays: repeat === 'custom' ? customDays : []
             };
             this.todos.push(todo);
         }
@@ -604,18 +660,17 @@ class HabitTracker {
     }
 
     deleteTodo(todoId) {
-        const todo = this.todos.find(t => t.id === todoId);
-        if (todo) {
-            // Remove from daily todos
-            this.todos = this.todos.filter(t => t.id !== todoId);
-            this.saveTodosToStorage();
-            this.renderTodos();
-
-            // Remove from weekly todos if it exists
-            this.weeklyTodos = this.weeklyTodos.filter(t => t.text !== todo.text);
-            this.saveWeeklyTodosToStorage();
-            this.renderWeeklyTodos();
-        }
+        this.openConfirmationModal('Do you really want to delete this task?', () => {
+            const todo = this.todos.find(t => t.id === todoId);
+            if (todo) {
+                this.todos = this.todos.filter(t => t.id !== todoId);
+                this.saveTodosToStorage();
+                this.renderTodos();
+                this.weeklyTodos = this.weeklyTodos.filter(t => t.text !== todo.text);
+                this.saveWeeklyTodosToStorage();
+                this.renderWeeklyTodos();
+            }
+        });
     }
 
     renderTodos() {
@@ -641,6 +696,32 @@ class HabitTracker {
         return JSON.parse(localStorage.getItem(this.getTodosStorageKey())) || [];
     }
 
+    checkRepeatingTodos() {
+        const today = new Date();
+        const todayDay = today.getDay();
+        const todayDate = today.toISOString().split('T')[0];
+
+        this.todos.forEach(todo => {
+            if (todo.repeat === 'daily' && todo.date !== todayDate) {
+                const newTodo = { ...todo, id: Date.now(), completed: false, date: todayDate };
+                this.todos.push(newTodo);
+            } else if (todo.repeat === 'weekly') {
+                const todoDate = new Date(todo.date);
+                const diffDays = Math.floor((today - todoDate) / (1000 * 60 * 60 * 24));
+                if (diffDays >= 7) {
+                    const newTodo = { ...todo, id: Date.now(), completed: false, date: todayDate };
+                    this.todos.push(newTodo);
+                }
+            } else if (todo.repeat === 'custom' && todo.customDays.includes(todayDay) && todo.date !== todayDate) {
+                const newTodo = { ...todo, id: Date.now(), completed: false, date: todayDate };
+                this.todos.push(newTodo);
+            }
+        });
+
+        this.saveTodosToStorage();
+        this.renderTodos();
+    }
+
     setupWeeklyTodosModal() {
         const modalHTML = `
             <div class="modal" id="weeklyTodoModal">
@@ -654,6 +735,26 @@ class HabitTracker {
                         <label for="weeklyTodoDate">Due Date:</label>
                         <input type="date" id="weeklyTodoDate" required>
                     </div>
+                    <div class="form-group">
+                        <label for="weeklyTodoRepeat">Repeat:</label>
+                        <select id="weeklyTodoRepeat">
+                            <option value="none">None</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="custom">Custom Days</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="weeklyCustomDaysContainer" style="display: none;">
+                        <label>Select Days:</label>
+                        <div class="days-selector">
+                            <label><input type="checkbox" value="0"> Sun</label>
+                            <label><input type="checkbox" value="1"> Mon</label>
+                            <label><input type="checkbox" value="2"> Tue</label>
+                            <label><input type="checkbox" value="3"> Wed</label>
+                            <label><input type="checkbox" value="4"> Thu</label>
+                            <label><input type="checkbox" value="5"> Fri</label>
+                            <label><input type="checkbox" value="6"> Sat</label>
+                        </div>
+                    </div>
                     <div class="modal-buttons">
                         <button class="modal-btn cancel" id="cancelWeeklyTodo">Cancel</button>
                         <button class="modal-btn save" id="saveWeeklyTodo">Save</button>
@@ -662,16 +763,22 @@ class HabitTracker {
             </div>
         `;
         document.body.insertAdjacentHTML('beforeend', modalHTML);
-        
+
         this.weeklyTodoModal = document.getElementById('weeklyTodoModal');
         this.weeklyTodoModalTitle = document.getElementById('weeklyTodoModalTitle');
         this.weeklyTodoTextInput = document.getElementById('weeklyTodoText');
         this.weeklyTodoDateInput = document.getElementById('weeklyTodoDate');
-        
-        // Set minimum date to today
+        this.weeklyTodoRepeatInput = document.getElementById('weeklyTodoRepeat');
+        this.weeklyCustomDaysContainer = document.getElementById('weeklyCustomDaysContainer');
+        this.weeklyCustomDaysCheckboxes = this.weeklyCustomDaysContainer.querySelectorAll('input[type="checkbox"]');
+
+        this.weeklyTodoRepeatInput.addEventListener('change', () => {
+            this.weeklyCustomDaysContainer.style.display = this.weeklyTodoRepeatInput.value === 'custom' ? 'block' : 'none';
+        });
+
         const today = new Date().toISOString().split('T')[0];
         this.weeklyTodoDateInput.min = today;
-        
+
         document.getElementById('cancelWeeklyTodo').addEventListener('click', () => this.closeWeeklyTodoModal());
         document.getElementById('saveWeeklyTodo').addEventListener('click', () => this.saveWeeklyTodo());
     }
@@ -685,12 +792,14 @@ class HabitTracker {
                 this.weeklyTodoModalTitle.textContent = 'Edit Weekly Task';
                 this.weeklyTodoTextInput.value = todo.text;
                 this.weeklyTodoDateInput.value = todo.dueDate;
+                this.weeklyTodoRepeatInput.value = todo.repeat || 'none';
                 this.currentEditingWeeklyTodoId = todoId;
             }
         } else {
             this.weeklyTodoModalTitle.textContent = 'Add Weekly Task';
             this.weeklyTodoTextInput.value = '';
             this.weeklyTodoDateInput.value = new Date().toISOString().split('T')[0];
+            this.weeklyTodoRepeatInput.value = 'none';
             this.currentEditingWeeklyTodoId = null;
         }
     }
@@ -699,12 +808,17 @@ class HabitTracker {
         this.weeklyTodoModal.classList.remove('active');
         this.weeklyTodoTextInput.value = '';
         this.weeklyTodoDateInput.value = '';
+        this.weeklyTodoRepeatInput.value = 'none';
         this.currentEditingWeeklyTodoId = null;
     }
 
     saveWeeklyTodo() {
         const text = this.weeklyTodoTextInput.value.trim();
         const date = this.weeklyTodoDateInput.value;
+        const repeat = this.weeklyTodoRepeatInput.value;
+        const customDays = Array.from(this.weeklyCustomDaysCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => parseInt(checkbox.value));
         if (!text || !date) return;
 
         if (this.currentEditingWeeklyTodoId) {
@@ -712,13 +826,17 @@ class HabitTracker {
             if (todo) {
                 todo.text = text;
                 todo.dueDate = date;
+                todo.repeat = repeat;
+                todo.customDays = repeat === 'custom' ? customDays : [];
             }
         } else {
             const todo = {
                 id: Date.now(),
                 text: text,
                 dueDate: date,
-                completed: false
+                completed: false,
+                repeat: repeat,
+                customDays: repeat === 'custom' ? customDays : []
             };
             this.weeklyTodos.push(todo);
         }
@@ -730,9 +848,11 @@ class HabitTracker {
     }
 
     deleteWeeklyTodo(todoId) {
-        this.weeklyTodos = this.weeklyTodos.filter(t => t.id !== todoId);
-        this.saveWeeklyTodosToStorage();
-        this.renderWeeklyTodos();
+        this.openConfirmationModal('Do you really want to delete this weekly task?', () => {
+            this.weeklyTodos = this.weeklyTodos.filter(t => t.id !== todoId);
+            this.saveWeeklyTodosToStorage();
+            this.renderWeeklyTodos();
+        });
     }
 
     renderWeeklyTodos() {
@@ -778,6 +898,29 @@ class HabitTracker {
             this.renderTodos();
             this.renderWeeklyTodos();
         }
+    }
+
+    checkRepeatingWeeklyTodos() {
+        const today = new Date();
+        const todayDay = today.getDay();
+        const todayDate = today.toISOString().split('T')[0];
+
+        this.weeklyTodos.forEach(todo => {
+            if (todo.repeat === 'weekly') {
+                const todoDate = new Date(todo.dueDate);
+                const diffDays = Math.floor((today - todoDate) / (1000 * 60 * 60 * 24));
+                if (diffDays >= 7) {
+                    const newTodo = { ...todo, id: Date.now(), completed: false, dueDate: todayDate };
+                    this.weeklyTodos.push(newTodo);
+                }
+            } else if (todo.repeat === 'custom' && todo.customDays.includes(todayDay) && todo.dueDate !== todayDate) {
+                const newTodo = { ...todo, id: Date.now(), completed: false, dueDate: todayDate };
+                this.weeklyTodos.push(newTodo);
+            }
+        });
+
+        this.saveWeeklyTodosToStorage();
+        this.renderWeeklyTodos();
     }
 
     saveWeeklyTodosToStorage() {
@@ -895,9 +1038,11 @@ class HabitTracker {
     }
 
     deleteJournal(journalId) {
-        this.journals = this.journals.filter(j => j.id !== journalId);
-        this.saveJournalsToStorage();
-        this.renderJournals();
+        this.openConfirmationModal('Do you really want to delete this journal?', () => {
+            this.journals = this.journals.filter(j => j.id !== journalId);
+            this.saveJournalsToStorage();
+            this.renderJournals();
+        });
     }
 
     renderJournals() {
@@ -1025,6 +1170,42 @@ class HabitTracker {
         const exportButton = document.getElementById('exportDataBtn');
         this.mainContent.appendChild(exportButton);
     }
+
+    setupConfirmationCard() {
+        const confirmationHTML = `
+            <div class="modal" id="confirmationModal">
+                <div class="modal-content">
+                    <h3>Are you sure?</h3>
+                    <p id="confirmationMessage"></p>
+                    <div class="modal-buttons">
+                        <button class="modal-btn cancel" id="cancelDelete">Cancel</button>
+                        <button class="modal-btn save" id="confirmDelete">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', confirmationHTML);
+
+        this.confirmationModal = document.getElementById('confirmationModal');
+        this.confirmationMessage = document.getElementById('confirmationMessage');
+        this.cancelDeleteBtn = document.getElementById('cancelDelete');
+        this.confirmDeleteBtn = document.getElementById('confirmDelete');
+
+        this.cancelDeleteBtn.addEventListener('click', () => this.closeConfirmationModal());
+    }
+
+    openConfirmationModal(message, onConfirm) {
+        this.confirmationMessage.textContent = message;
+        this.confirmationModal.classList.add('active');
+        this.confirmDeleteBtn.onclick = () => {
+            this.closeConfirmationModal();
+            onConfirm();
+        };
+    }
+
+    closeConfirmationModal() {
+        this.confirmationModal.classList.remove('active');
+    }
 }
 
 // Make habitTracker globally accessible for the delete button onclick handler
@@ -1033,4 +1214,5 @@ document.addEventListener('DOMContentLoaded', () => {
     habitTracker = new HabitTracker();
     habitTracker.setupJournalModal();
     habitTracker.setupGoalsModal();
+    habitTracker.setupConfirmationCard(); // Initialize confirmation card
 });

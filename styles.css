@@ -758,6 +758,62 @@ h1 {
     display: none;
 }
 
+.days-selector {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.days-selector label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.days-selector input[type="checkbox"] {
+    display: none;
+}
+
+.days-selector input[type="checkbox"]:checked + label {
+    background-color: #2196F3;
+    color: white;
+    box-shadow: 0 2px 6px rgba(33, 150, 243, 0.5);
+}
+
+.days-selector label:hover {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.dark-mode .days-selector label {
+    background-color: #444;
+    color: #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .days-selector input[type="checkbox"]:checked + label {
+    background-color: #1976D2;
+    box-shadow: 0 2px 6px rgba(25, 118, 210, 0.5);
+}
+
+.dark-mode .days-selector label:hover {
+    background-color: #555;
+    color: #fff;
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
     .container {
