@@ -1052,13 +1052,20 @@ class HabitTracker {
         }
 
         const journal = this.journals[this.currentJournalIndex];
+        const icons = ['📓', '📝', '📒', '📓'];
+        const iconIndex = this.currentJournalIndex % icons.length;
+
         this.journalsList.innerHTML = `
             <div class="journal-item" onclick="habitTracker.openJournalModal(true, ${journal.id})">
                 <span class="journal-date">${new Date(journal.date).toLocaleDateString()}</span>
-                <div class="journal-icon">📒</div>
+                <div class="journal-icon">${icons[iconIndex]}</div>
                 <button class="delete-journal-btn" onclick="event.stopPropagation(); habitTracker.deleteJournal(${journal.id})">Delete</button>
             </div>
         `;
+
+        // Update navigation button icons
+        this.prevJournalBtn.textContent = this.currentJournalIndex > 0 ? '⬅️' : '🔒';
+        this.nextJournalBtn.textContent = this.currentJournalIndex < this.journals.length - 1 ? '➡️' : '🔒';
     }
 
     showPreviousJournal() {
