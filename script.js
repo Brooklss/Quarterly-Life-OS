@@ -1055,10 +1055,7 @@ class HabitTracker {
         this.journalsList.innerHTML = `
             <div class="journal-item" onclick="habitTracker.openJournalModal(true, ${journal.id})">
                 <span class="journal-date">${new Date(journal.date).toLocaleDateString()}</span>
-                <p class="journal-text"><strong>What Worked Well?</strong><br>${journal.workedWell}</p>
-                <p class="journal-text"><strong>What Didn’t Work?</strong><br>${journal.didntWork}</p>
-                <p class="journal-text"><strong>What Needs Adjustment?</strong><br>${journal.needsAdjustment}</p>
-                <p class="journal-text"><strong>How Do I Feel?</strong><br>${journal.feel}</p>
+                <div class="journal-icon">📒</div>
                 <button class="delete-journal-btn" onclick="event.stopPropagation(); habitTracker.deleteJournal(${journal.id})">Delete</button>
             </div>
         `;

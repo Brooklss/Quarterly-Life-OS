@@ -814,6 +814,18 @@ h1 {
     color: #fff;
 }
 
+.journal-icon {
+    font-size: 2rem;
+    text-align: center;
+    margin: 8px 0;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.journal-icon:hover {
+    transform: scale(1.1);
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
     .container {
