@@ -1004,6 +1004,10 @@ class HabitTracker {
                         <label for="journalFeel">How Do I Feel?</label>
                         <textarea id="journalFeel" rows="3" required></textarea>
                     </div>
+                    <div class="form-group">
+                        <label for="journalNotes">Notes:</label>
+                        <textarea id="journalNotes" rows="3"></textarea>
+                    </div>
                     <div class="modal-buttons">
                         <button class="modal-btn cancel" id="cancelJournal">Cancel</button>
                         <button class="modal-btn save" id="saveJournal">Save</button>
@@ -1019,6 +1023,7 @@ class HabitTracker {
         this.journalDidntWorkInput = document.getElementById('journalDidntWork');
         this.journalNeedsAdjustmentInput = document.getElementById('journalNeedsAdjustment');
         this.journalFeelInput = document.getElementById('journalFeel');
+        this.journalNotesInput = document.getElementById('journalNotes'); // New Notes input
         
         document.getElementById('cancelJournal').addEventListener('click', () => this.closeJournalModal());
         document.getElementById('saveJournal').addEventListener('click', () => this.saveJournal());
@@ -1035,6 +1040,7 @@ class HabitTracker {
                 this.journalDidntWorkInput.value = journal.didntWork;
                 this.journalNeedsAdjustmentInput.value = journal.needsAdjustment;
                 this.journalFeelInput.value = journal.feel;
+                this.journalNotesInput.value = journal.notes; // Populate notes
                 this.currentEditingJournalId = journalId;
             }
         } else {
@@ -1043,6 +1049,7 @@ class HabitTracker {
             this.journalDidntWorkInput.value = '';
             this.journalNeedsAdjustmentInput.value = '';
             this.journalFeelInput.value = '';
+            this.journalNotesInput.value = ''; // Clear notes
             this.currentEditingJournalId = null;
         }
     }
@@ -1053,6 +1060,7 @@ class HabitTracker {
         this.journalDidntWorkInput.value = '';
         this.journalNeedsAdjustmentInput.value = '';
         this.journalFeelInput.value = '';
+        this.journalNotesInput.value = ''; // Clear notes
         this.currentEditingJournalId = null;
     }
 
@@ -1061,6 +1069,7 @@ class HabitTracker {
         const didntWork = this.journalDidntWorkInput.value.trim();
         const needsAdjustment = this.journalNeedsAdjustmentInput.value.trim();
         const feel = this.journalFeelInput.value.trim();
+        const notes = this.journalNotesInput.value.trim(); // Save notes
         if (!workedWell || !didntWork || !needsAdjustment || !feel) return;
 
         if (this.currentEditingJournalId) {
@@ -1070,6 +1079,7 @@ class HabitTracker {
                 journal.didntWork = didntWork;
                 journal.needsAdjustment = needsAdjustment;
                 journal.feel = feel;
+                journal.notes = notes; // Update notes
                 journal.date = new Date().toISOString().split('T')[0];
             }
         } else {
@@ -1079,6 +1089,7 @@ class HabitTracker {
                 didntWork: didntWork,
                 needsAdjustment: needsAdjustment,
                 feel: feel,
+                notes: notes, // Add notes
                 date: new Date().toISOString().split('T')[0]
             };
             this.journals.push(journal);
@@ -1111,6 +1122,7 @@ class HabitTracker {
             <div class="journal-item" onclick="habitTracker.openJournalModal(true, ${journal.id})">
                 <span class="journal-date">${new Date(journal.date).toLocaleDateString()}</span>
                 <div class="journal-icon">${icons[iconIndex]}</div>
+                <div class="journal-notes">${journal.notes || 'No notes added.'}</div> <!-- Display notes -->
                 <button class="delete-journal-btn" onclick="event.stopPropagation(); habitTracker.deleteJournal(${journal.id})">Delete</button>
             </div>
         `;
