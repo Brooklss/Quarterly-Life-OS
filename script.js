@@ -989,19 +989,19 @@ class HabitTracker {
                 <div class="modal-content">
                     <h3 id="journalModalTitle">Add Weekly Journal</h3>
                     <div class="form-group">
-                        <label for="journalText">What Worked Well?</label>
+                        <label for="journalWorkedWell">What Worked Well?</label>
                         <textarea id="journalWorkedWell" rows="3" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="journalText">What Didn’t Work?</label>
+                        <label for="journalDidntWork">What Didn’t Work?</label>
                         <textarea id="journalDidntWork" rows="3" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="journalText">What Needs Adjustment?</label>
+                        <label for="journalNeedsAdjustment">What Needs Adjustment?</label>
                         <textarea id="journalNeedsAdjustment" rows="3" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="journalText">How Do I Feel?</label>
+                        <label for="journalFeel">How Do I Feel?</label>
                         <textarea id="journalFeel" rows="3" required></textarea>
                     </div>
                     <div class="modal-buttons">
