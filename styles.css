@@ -229,7 +229,7 @@ h1 {
 
 .habit-header-row {
     display: flex;
-    gap: 2px;
+    gap: 4px; /* Adjusted gap between habit headers */
     height: 8px;
     margin-bottom: 2px;
 }
