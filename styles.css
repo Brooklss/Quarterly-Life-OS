@@ -164,8 +164,10 @@ h1 {
 }
 
 .tracker-grid {
-    display: flex;
-    gap: 24px;
+    display: grid;
+    grid-template-columns: auto 1fr; /* Align dates column and habit cells */
+    gap: 16px; /* Adjust gap between columns */
+    overflow-x: auto; /* Enable horizontal scrolling if needed */
 }
 
 .dates-column {
@@ -173,6 +175,15 @@ h1 {
     flex-direction: column;
     gap: 2px;
     padding-top: 48px;
+    position: sticky;
+    left: 0;
+    background: white; /* Ensure dates column has a background */
+    z-index: 2; /* Keep dates column above other elements */
+    padding-right: 8px; /* Add spacing between dates and habit cells */
+}
+
+.dark-mode .dates-column {
+    background: #1e1e1e;
 }
 
 .date-cell {
@@ -232,7 +243,7 @@ h1 {
 
 .day-row {
     display: flex;
-    gap: 2px;
+    gap: 4px; /* Adjust spacing between habit cells */
     height: 32px;
     margin-bottom: 2px;
 }
@@ -294,6 +305,9 @@ h1 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjust minimum width */
+    gap: 16px;
 }
 
 .dark-mode .management-panel {
@@ -314,6 +328,9 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: normal; /* Allow text to wrap */
 }
 
 .dark-mode .habits-list,
@@ -335,6 +352,9 @@ h1 {
     border: 1px solid #eee;
     border-radius: 8px;
     transition: all 0.2s ease;
+    flex-wrap: wrap; /* Allow content to wrap */
+    word-wrap: break-word; /* Prevent text overflow */
+    white-space: normal; /* Allow text to break into multiple lines */
 }
 
 .dark-mode .habit-item,
@@ -423,6 +443,8 @@ h1 {
     font-size: 1rem;
     width: 100%;
     transition: all 0.2s ease;
+    max-width: 100%; /* Prevent buttons from overflowing */
+    text-align: center;
 }
 
 .add-habit-btn:hover, .add-goal-btn:hover, 
@@ -847,10 +869,12 @@ h1 {
     }
 
     .tracker-grid {
-        gap: 12px;
+        grid-template-columns: auto 1fr; /* Maintain alignment for smaller screens */
+        gap: 12px; /* Reduce gap between columns */
         overflow-x: auto;
         padding-bottom: 16px;
         -webkit-overflow-scrolling: touch;
+        flex-direction: column; /* Stack columns vertically */
     }
 
     .month-columns {
@@ -883,10 +907,36 @@ h1 {
 
     .date-cell, .day-row {
         height: 28px;
+        gap: 3px; /* Reduce spacing between habit cells */
     }
 
     .management-panel {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Single column layout */
+    }
+
+    .habits-section, .goals-section, .todos-section, 
+    .weekly-todos-section, .journals-section, .streaks-section {
+        margin-bottom: 16px;
+    }
+
+    .add-habit-btn, .add-goal-btn, .add-todo-btn, 
+    .add-weekly-todo-btn, .add-journal-btn {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+
+    .journal-navigation {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .journal-nav-btn {
+        width: 100%;
+    }
+
+    .habits-list, .goals-list, .todos-list, 
+    .weekly-todos-list, .journals-list, .streaks-list {
+        overflow-x: auto; /* Enable horizontal scrolling if needed */
     }
 }
 
@@ -915,7 +965,7 @@ h1 {
     }
 
     .tracker-grid {
-        gap: 6px;
+        gap: 8px; /* Further reduce gap for very small screens */
     }
 
     .dates-column {
@@ -933,6 +983,7 @@ h1 {
 
     .date-cell, .day-row {
         height: 24px;
+        gap: 2px; /* Further reduce spacing between habit cells */
     }
 
     .habit-header {
@@ -946,5 +997,31 @@ h1 {
     .button-icon {
         display: block;
         font-size: 24px;
+    }
+
+    .add-habit-btn, .add-goal-btn, .add-todo-btn, 
+    .add-weekly-todo-btn, .add-journal-btn {
+        font-size: 0.8rem;
+        padding: 4px 8px;
+    }
+
+    .journal-navigation {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .journal-nav-btn {
+        font-size: 0.9rem;
+    }
+
+    .habits-list, .goals-list, .todos-list, 
+    .weekly-todos-list, .journals-list, .streaks-list {
+        padding: 8px; /* Reduce padding for smaller screens */
+    }
+
+    .add-habit-btn, .add-goal-btn, .add-todo-btn, 
+    .add-weekly-todo-btn, .add-journal-btn {
+        font-size: 0.8rem; /* Adjust font size */
+        padding: 6px 10px; /* Reduce padding */
     }
 }
