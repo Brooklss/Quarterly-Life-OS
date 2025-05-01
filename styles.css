@@ -372,6 +372,14 @@ h1 {
     flex-grow: 1;
 }
 
+.habit-item.dragging {
+    opacity: 0.5;
+}
+
+.habit-item.drag-over {
+    border: 2px dashed #2196F3;
+}
+
 .streak-count {
     font-weight: bold;
     color: #2196F3;

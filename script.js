@@ -211,7 +211,7 @@ class HabitTracker {
 
     renderHabits() {
         this.habitsList.innerHTML = this.habits.map(habit => `
-            <div class="habit-item" onclick="habitTracker.openModal(true, ${habit.id})">
+            <div class="habit-item" draggable="true" data-habit-id="${habit.id}" onclick="habitTracker.openModal(true, ${habit.id})">
                 <div class="color-preview" style="background-color: ${habit.color}"></div>
                 <span class="habit-name">${habit.name}</span>
                 <span class="streak-count">Streak: ${habit.streak}</span>
@@ -401,6 +401,58 @@ class HabitTracker {
         this.nextJournalBtn.addEventListener('click', () => this.showNextJournal());
         document.getElementById('exportDataBtn').addEventListener('click', () => this.exportData());
         document.getElementById('importDataInput').addEventListener('change', (event) => this.importData(event));
+        this.enableHabitReordering();
+    }
+
+    enableHabitReordering() {
+        let draggedHabit = null;
+
+        this.habitsList.addEventListener('dragstart', (event) => {
+            if (event.target.classList.contains('habit-item')) {
+                draggedHabit = event.target;
+                event.target.classList.add('dragging');
+            }
+        });
+
+        this.habitsList.addEventListener('dragend', (event) => {
+            if (event.target.classList.contains('habit-item')) {
+                event.target.classList.remove('dragging');
+                draggedHabit = null;
+
+                // Update the habits array based on the new order
+                this.habits = Array.from(this.habitsList.children).map((habitElement) => {
+                    const habitId = parseInt(habitElement.dataset.habitId, 10);
+                    return this.habits.find((habit) => habit.id === habitId);
+                });
+
+                this.saveHabitsToStorage();
+                this.createGrid(); // Update the checklist order
+            }
+        });
+
+        this.habitsList.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            const afterElement = this.getDragAfterElement(this.habitsList, event.clientY);
+            const draggingElement = this.habitsList.querySelector('.dragging');
+            if (afterElement == null) {
+                this.habitsList.appendChild(draggingElement);
+            } else {
+                this.habitsList.insertBefore(draggingElement, afterElement);
+            }
+        });
+    }
+
+    getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('.habit-item:not(.dragging)')];
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
     setupGoalsModal() {
